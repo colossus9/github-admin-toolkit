@@ -41,7 +41,24 @@ function list
   # Function to list available toolkit scripts
   # ------------------------------------------
 
+  header
   . ./utilities/script-list.sh
+}
+
+function header
+{
+  # ------------------------------------------
+  # Function to print the header
+  # ------------------------------------------
+
+  printf "\n"
+  printf " ------------------------------------------------------------\n"
+  printf "  GitHub Administrator Toolkit\n"
+  printf "  $(date)\n"
+  printf "  Running $0\n"
+  [ -n "$DEBUG" ] && printf "  (debug) Args: $ARGS\n"
+  printf " ------------------------------------------------------------\n"
+  printf "\n"
 }
 
 # Set standard Messages
@@ -62,6 +79,7 @@ OWNER=
 REPO=
 LOG="./log/$(basename $0).log"
 DEBUG=
+LIST=
 SCRIPTNAME=
 
 # Check if any arguments were passed
@@ -79,7 +97,7 @@ fi
       exit 0
       ;;
     -l|--list)
-     list
+      list
       exit 0
       ;;
     *)
@@ -155,13 +173,9 @@ fi
 # +---------------------------------------------------------------------------+
 # | Perform work.                                                             |
 # +---------------------------------------------------------------------------+
-printf "\n"
-printf " -----------------------------\n"
-printf " $(date)\n"
-printf " Running $0\n"
-[ -n "$DEBUG" ] && printf " (debug) Args: $ARGS\n"
-printf " -----------------------------\n"
-printf "\n"
+
+# Display header
+header
 
 # If in debug mode, display values
 if [ -n "$DEBUG" ]; then
