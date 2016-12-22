@@ -25,7 +25,6 @@
 
 set -e
 
-
 function usage
 {
   # ------------------------------------------
@@ -42,6 +41,7 @@ ERRMSG_SERVER="\nERROR: You must specify a server to connect to with the -s|--se
 ERRMSG_SCRIPTNAME="\nERROR: You must specify a script to run with the <scriptname> parameter.\n"
 
 # Reset environment (and set defaults where necessary)
+ARGS="$@"
 RC=0  # Return code
 SERVER=
 OWNER=
@@ -113,7 +113,7 @@ done
 # Get the non-optional/last argument for the SCRIPTNAME
 [[ -n $1 ]] && SCRIPTNAME="$1"
 
-# Prepare log file (will fix later)
+# Prepare log file (will fix this later)
 #mkdir -p $(dirname $LOG)  # Ensure the logging directory exists
 #touch $LOG                # Create log file if it doesn't exist
 #chmod 777 $LOG            # Make log readable
@@ -134,17 +134,23 @@ fi
 # Exit with error if something isn't right. Proceed if we are good
 [ "$RC" -ne 0 ] && usage && exit $RC
 
+# Do work
+printf "\n"
+printf " -----------------------------\n"
+printf " $(date)\n"
+printf " Running $0\n"
+[ -n "$DEBUG" ] && printf " (debug) Args: $ARGS\n"
+printf " -----------------------------\n"
+printf "\n"
+
 # If in debug mode, display values
 if [ -n "$DEBUG" ]; then
-  printf "\ndebug: Displaying parameter values:\n"
-  [ -n "$SERVER" ] && printf "  SERVER=$SERVER\n"
-  [ -n "$OWNER" ] && printf "  OWNER=$OWNER\n"
-  [ -n "$REPO" ] && printf "  REPO=$REPO\n"
-  [ -n "$LOG" ] && printf "  LOG=$LOG\n"
-  [ -n "$SCRIPTNAME" ] && printf "  SCRIPTNAME=$SCRIPTNAME\n"
-  [ -n "$DEBUG" ] && printf "  DEBUG=true\n"
+  printf "\n(debug) Displaying parameter values:\n"
+  [ -n "$SERVER" ] && printf "  --> SERVER=$SERVER\n"
+  [ -n "$OWNER" ] && printf "  --> OWNER=$OWNER\n"
+  [ -n "$REPO" ] && printf "  --> REPO=$REPO\n"
+  [ -n "$LOG" ] && printf "  --> LOG=$LOG\n"
+  [ -n "$SCRIPTNAME" ] && printf "  --> SCRIPTNAME=$SCRIPTNAME\n"
+  [ -n "$DEBUG" ] && printf "  --> DEBUG=true\n"
   printf "\n"
 fi
-
-# Do work
-echo "Performing work..."
