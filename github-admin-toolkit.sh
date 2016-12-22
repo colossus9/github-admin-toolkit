@@ -70,11 +70,15 @@ if [[ $# -eq 0 ]] ; then
   exit 2
 fi
 
-# If requested as only option, display usage
+# If single option requested, perform display
 [ $# -eq 1 ] &&
   case "$1" in
     -h|--help)
       usage
+      exit 0
+      ;;
+    -l|--list)
+     list
       exit 0
       ;;
     *)
