@@ -14,7 +14,7 @@
 #/
 #/ OPTIONS:
 #/   -h | --help    Display this help message.
-#/   -l | --list    List available scripts to execute
+#/   -l | --list    List available scripts to execute.
 #/   -s | --server  The GitHub/GitHub Enterprise server to connect to.
 #/   -o | --owner   The GitHub owner name on the server.
 #/   -r | --repo    The GitHub repository name on the server.
@@ -40,7 +40,24 @@ function list
   # Function to list available toolkit scripts
   # ------------------------------------------
 
+ header
   . ./utilities/script-list.sh
+}
+
+function header
+{
+  # ------------------------------------------
+  # Function to print the header
+  # ------------------------------------------
+
+  printf "\n"
+ printf " ------------------------------------------------------------\n"
+printf "  GitHub Administrator Toolkit\n"
+printf "  $(date)\n"
+printf "  Running $0\n"
+[ -n "$DEBUG" ] && printf "  (debug) Args: $ARGS\n"
+printf " ------------------------------------------------------------\n"
+printf "\n"
 }
 
 # Set standard Messages
@@ -61,6 +78,7 @@ OWNER=
 REPO=
 LOG="./log/$(basename $0).log"
 DEBUG=
+LIST=
 SCRIPTNAME=
 
 # Check if any arguments were passed
@@ -96,7 +114,7 @@ while [ $# -gt 1 ]; do
       exit 0
       ;;
     -l|--list)
-      list
+    list
       exit 0
       ;;
     -s|--server)
@@ -154,13 +172,9 @@ fi
 # +---------------------------------------------------------------------------+
 # | Perform work.                                                             |
 # +---------------------------------------------------------------------------+
-printf "\n"
-printf " -----------------------------\n"
-printf " $(date)\n"
-printf " Running $0\n"
-[ -n "$DEBUG" ] && printf " (debug) Args: $ARGS\n"
-printf " -----------------------------\n"
-printf "\n"
+
+# Display header
+header
 
 # If in debug mode, display values
 if [ -n "$DEBUG" ]; then
