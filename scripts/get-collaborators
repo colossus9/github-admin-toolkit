@@ -9,7 +9,7 @@
 # +---------------------------------------------------------------------------+
 # | Set Attribute(s) for the GitHub Admin Toolkit.                            |
 # +---------------------------------------------------------------------------+
-GITHUB_ADMIN_DESC="List all collaborators."
+GITHUB_ADMIN_DESC="List all collaborators for the specified OWNER/REPO."
 GITHUB_ADMIN_ENABLED=1
 
 # +---------------------------------------------------------------------------+
@@ -34,9 +34,5 @@ fi
 # +---------------------------------------------------------------------------+
 # | Perform work.                                                             |
 # +---------------------------------------------------------------------------+
-echo " "
-echo "The collaborators are:"
-echo " "
-echo "  CollabA"
-echo "  CollabB"
-echo "  CollabC"
+
+# Build GE
