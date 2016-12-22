@@ -40,9 +40,14 @@ ERRMSG_UNKOPTS="\nERROR: Unknown option:"
 ERRMSG_SERVER="\nERROR: You must specify a server to connect to with the -s|--server option.\n"
 ERRMSG_SCRIPTNAME="\nERROR: You must specify a script to run with the <scriptname> parameter.\n"
 
+# +---------------------------------------------------------------------------+
+# | Get parameters from the command line options.                             |
+# +---------------------------------------------------------------------------+
+
 # Reset environment (and set defaults where necessary)
 ARGS="$@"
 RC=0  # Return code
+SCRIPTLOADER="./script-loader.sh"
 SERVER=
 OWNER=
 REPO=
@@ -134,7 +139,9 @@ fi
 # Exit with error if something isn't right. Proceed if we are good
 [ "$RC" -ne 0 ] && usage && exit $RC
 
-# Do work
+# +---------------------------------------------------------------------------+
+# | Perform work.                                                             |
+# +---------------------------------------------------------------------------+
 printf "\n"
 printf " -----------------------------\n"
 printf " $(date)\n"
@@ -154,3 +161,6 @@ if [ -n "$DEBUG" ]; then
   [ -n "$DEBUG" ] && printf "  --> DEBUG=true\n"
   printf "\n"
 fi
+
+# Load the available scripts
+. $SCRIPTLOADER
