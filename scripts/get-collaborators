@@ -9,7 +9,7 @@
 # +---------------------------------------------------------------------------+
 # | Set Attribute(s) for the GitHub Admin Toolkit.                            |
 # +---------------------------------------------------------------------------+
-GITHUB_ADMIN_DESC="Description for get-collaborators."
+GITHUB_ADMIN_DESC="List all collaborators."
 GITHUB_ADMIN_ENABLED=1
 
 # +---------------------------------------------------------------------------+

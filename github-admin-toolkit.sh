@@ -14,10 +14,10 @@
 #/
 #/ OPTIONS:
 #/   -h | --help    Display this help message.
+#/   -l | --list    List available scripts to execute
 #/   -s | --server  The GitHub/GitHub Enterprise server to connect to.
 #/   -o | --owner   The GitHub owner name on the server.
 #/   -r | --repo    The GitHub repository name on the server.
-#/   -l | --log     (Optional) The log file to write output to.
 #/   -d | --debug   (Optional) If specified, show debug output.
 #/   <scriptname>   The name of the script to execute.
 #/ -------------------------------------------------------------------
@@ -34,6 +34,15 @@ function usage
   grep '^#/' <"$0" | cut -c 4-
 }
 
+function list
+{
+  # ------------------------------------------
+  # Function to list available toolkit scripts
+  # ------------------------------------------
+
+  . ./utilities/script-list.sh
+}
+
 # Set standard Messages
 ERRMSG_NUMOPTS="\nERROR: You must specify options with this script. See the usage message for help.\n"
 ERRMSG_UNKOPTS="\nERROR: Unknown option:"
@@ -47,7 +56,6 @@ ERRMSG_SCRIPTNAME="\nERROR: You must specify a script to run with the <scriptnam
 # Reset environment (and set defaults where necessary)
 ARGS="$@"
 RC=0  # Return code
-SCRIPTLOADER="./script-loader.sh"
 SERVER=
 OWNER=
 REPO=
@@ -83,6 +91,10 @@ while [ $# -gt 1 ]; do
       usage
       exit 0
       ;;
+    -l|--list)
+      list
+      exit 0
+      ;;
     -s|--server)
       SERVER="$2"
       shift
@@ -93,10 +105,6 @@ while [ $# -gt 1 ]; do
       ;;
     -r|--repo)
       REPO="$2"
-      shift
-      ;;
-    -l|--log)
-      LOG="$2"
       shift
       ;;
     -d|--debug)
@@ -163,4 +171,4 @@ if [ -n "$DEBUG" ]; then
 fi
 
 # Load the available scripts
-. $SCRIPTLOADER
+. ./utilities/script-loader.sh
