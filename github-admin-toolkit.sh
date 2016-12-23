@@ -184,4 +184,5 @@ if [ -n "$DEBUG" ]; then
 fi
 
 # Load the available scripts and perform the work
+. ./utilities/api-base.sh
 . ./utilities/script-loader.sh

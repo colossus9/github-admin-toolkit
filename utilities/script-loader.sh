@@ -21,12 +21,13 @@ for script in `ls -1 $SCRIPTDIR`; do
     if [ "$SCRIPTNAME" == "$script" ]; then # The script was found
       ISAVAIL=1;
       break;
-  fi
+    fi;
+  fi;
 done
 
 # Inform user if none were available
 if [ "$ISAVAIL" -ne "1" ]; then
-  echo "ERROR ($0): The script '$SCRIPTNAME' is not available. Please try again later.";
+  printf "ERROR: The script '$SCRIPTNAME' is not available. Please try again later.\n\n";
   exit 1;
 else
   . ./scripts/$SCRIPTNAME;   # Execute the script if it was found
