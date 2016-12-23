@@ -11,12 +11,23 @@
 # Set parameters
 SCRIPTDIR="./scripts/"                 # Location to search for eligible scripts
 ENABLED_FILTER="GITHUB_ADMIN_ENABLED=1"  # What to look for when loading scripts
+AVAIL_SCRIPTS="./avail-scripts.txt"    # Placeholder to build available scripts table
+ISAVAIL=0
 
 # Get the list of eligible scripts to execute with github-admin-toolkit:
-#for script in `ls -1 $SCRIPTDIR`; do
-#  if [ "`grep '^GITHUB_ADMIN_ENABLED' <"$SCRIPTDIR\$script"`" == "$ENABLED_FILTER" ]; then
-    #    echo "$script: `grep '^GITHUB_ADMIN_DESC' <"$SCRIPTDIR\$script" | cut -d '"' -f2`";
-#  fi
-#done
+rm -rf $AVAIL_SCRIPTS  # Clear the table
+for script in `ls -1 $SCRIPTDIR`; do
+  if [ "`grep '^GITHUB_ADMIN_ENABLED' <"$SCRIPTDIR\$script"`" == "$ENABLED_FILTER" ]; then
+    if [ "$SCRIPTNAME" == "$script" ]; then # The script was found
+      ISAVAIL=1;
+      break;
+  fi
+done
 
-echo "Detect if $SCRIPTNAME is eligible"
+# Inform user if none were available
+if [ "$ISAVAIL" -ne "1" ]; then
+  echo "ERROR ($0): The script '$SCRIPTNAME' is not available. Please try again later.";
+  exit 1;
+else
+  . ./scripts/$SCRIPTNAME;   # Execute the script if it was found
+fi
