@@ -8,9 +8,10 @@
 
 # +---------------------------------------------------------------------------+
 # | Set Attribute(s) for the GitHub Admin Toolkit.                            |
+# | Disable this script by setting GITHUB_ADMIN_ENABLED=0                     |
 # +---------------------------------------------------------------------------+
 GITHUB_ADMIN_DESC="List all collaborators for the specified OWNER/REPO."
-GITHUB_ADMIN_ENABLED=1  # Set this to a value other than '1' to disable
+GITHUB_ADMIN_ENABLED=1
 
 # +---------------------------------------------------------------------------+
 # | We need a minimum set of params before we can continue. REPO is optional. |
