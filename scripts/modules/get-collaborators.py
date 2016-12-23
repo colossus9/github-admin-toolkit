@@ -12,7 +12,7 @@ import urllib2
 
 def main():
 
-    print "Inside get-collaborators.py"
+    print "DEBUG is '" + os.environ['DEBUG'] + "'"
     print "APIBASE is '" + os.environ['APIBASE'] + "'"
     #json.load(urllib2.urlopen("url"))
 

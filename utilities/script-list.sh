@@ -14,16 +14,21 @@ export ENABLED_FILTER="GITHUB_ADMIN_ENABLED=1"  # What to look for when loading 
 export AVAIL_SCRIPTS="./avail-scripts.txt"    # Placeholder to build available scripts table
 export ISAVAIL=0
 
+# Debug
+[ -n "$DEBUG" ] && echo "(debug) Running script-list.sh"
+
 # Get the list of eligible scripts to execute with github-admin-toolkit:
 printf "\n  The following is a list of available scripts:\n\n"
 rm -rf $AVAIL_SCRIPTS  # Clear the table
 echo "SCRIPTNAME:DESCRIPTION" >> $AVAIL_SCRIPTS
 echo "----------:-----------" >> $AVAIL_SCRIPTS
 for script in `ls -1 $SCRIPTDIR`; do
-  if [ "`grep '^GITHUB_ADMIN_ENABLED' <"$SCRIPTDIR\$script"`" == "$ENABLED_FILTER" ]; then
-    export ISAVAIL=1;
-    echo "$script:`grep '^GITHUB_ADMIN_DESC' <"$SCRIPTDIR\$script" | cut -d '"' -f2`" >> $AVAIL_SCRIPTS;
-  fi
+  if [ -f "$SCRIPTDIR/$script" ]; then  # Check that the script is a regular file first
+    if [ "`grep '^GITHUB_ADMIN_ENABLED' < $SCRIPTDIR\$script`" == "$ENABLED_FILTER" ]; then
+      export ISAVAIL=1;
+      echo "$script:`grep '^GITHUB_ADMIN_DESC' <"$SCRIPTDIR\$script" | cut -d '"' -f2`" >> $AVAIL_SCRIPTS;
+    fi;
+  fi;
 done
 
 # Inform user if none were available
