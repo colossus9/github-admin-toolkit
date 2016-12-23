@@ -30,6 +30,6 @@ fi
 if curl --fail -s -o "/dev/null" -H "$HTTPHEADERS" $APIBASE; then
   printf "OK\n\n";
 else
-  printf "\nERROR: The provided endpoint is not valid.\n\n";
+  printf "\nERROR: The provided endpoint is not valid or it cannot be reached.\n\n";
   exit 1;
 fi
