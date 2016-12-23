@@ -8,12 +8,12 @@
 
 # Reset environment
 APIBASE=
-HTTPHEADERS="Accept: applican/vnd.github.v3+json"
+HTTPHEADERS="Accept: application/vnd.github.v3+json"
 
 # Check if we have a valid SERVER parameter
 if [ ! -n "$SERVER" ]; then
-  echo "ERROR ($0): The SERVER parameter is empty.";
-  exit 2;
+  echo -n "Enter the name of the GitHub server (i.e. github.com) and press [ENTER]: "
+  read SERVER
 fi
 
 # Determine if this is for the public github.com
@@ -28,10 +28,8 @@ STATUSCODE=0
 STATUSCODE=`curl -s -o /dev/null -I -w "%{http_code}" -H "$HTTPHEADERS" $APIBASE/feeds`
 
 if [ "$STATUSCODE" -ne "200" ]; then
-
-
-
-
-
-
-echo "INFO ($0): API Base URL is '$APIBASE'";
+  echo "ERROR ($0): The server $SERVER did not return a valid status code. Please check your -s|--server name and try again.";
+  exit 1;
+else
+  echo "INFO ($0): API Base URL '$APIBASE' is valid.";
+fi

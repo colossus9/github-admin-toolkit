@@ -64,8 +64,6 @@ function header
 # Set standard Messages
 ERRMSG_NUMOPTS="\nERROR: You must specify options with this script. See the usage message for help.\n"
 ERRMSG_UNKOPTS="\nERROR: Unknown option:"
-ERRMSG_SERVER="\nERROR: You must specify a server to connect to with the -s|--server option.\n"
-ERRMSG_SCRIPTNAME="\nERROR: You must specify a script to run with the <scriptname> parameter.\n"
 
 # +---------------------------------------------------------------------------+
 # | Get parameters from the command line options.                             |
@@ -73,7 +71,6 @@ ERRMSG_SCRIPTNAME="\nERROR: You must specify a script to run with the <scriptnam
 
 # Reset environment (and set defaults where necessary)
 ARGS="$@"
-RC=0  # Return code
 SERVER=
 OWNER=
 REPO=
@@ -157,18 +154,15 @@ done
 
 # Check that we have a SERVER to connect to
 if [ ! -n "$SERVER" ]; then
-  printf "$ERRMSG_SERVER"
-  RC=2  # Return code
+  echo -n "Enter the name of the GitHub server (i.e. github.com) and press [ENTER]: "
+  read SERVER
 fi
 
 # Check that we have a SCRIPTNAME to work with
 if [ ! -n "$SCRIPTNAME" ]; then
-  printf "$ERRMSG_SCRIPTNAME"
-  RC=2  # Return code
+  echo -n "Enter the name of the script (i.e. get-collaborators) and press [ENTER]: "
+  read SCRIPTNAME
 fi
-
-# Exit with error if something isn't right. Proceed if we are good
-[ "$RC" -ne 0 ] && usage && exit $RC
 
 # +---------------------------------------------------------------------------+
 # | Perform work.                                                             |
@@ -189,5 +183,5 @@ if [ -n "$DEBUG" ]; then
   printf "\n"
 fi
 
-# Load the available scripts
+# Load the available scripts and perform the work
 . ./utilities/script-loader.sh
