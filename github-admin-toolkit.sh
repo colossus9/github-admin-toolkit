@@ -116,19 +116,19 @@ while [ $# -gt 1 ]; do
       exit 0
       ;;
     -s|--server)
-      SERVER="$2"
+      export SERVER="$2"
       shift
       ;;
     -o|--owner)
-      OWNER="$2"
+      export OWNER="$2"
       shift
       ;;
     -r|--repo)
-      REPO="$2"
+      export REPO="$2"
       shift
       ;;
     -d|--debug)
-      DEBUG=1
+      export DEBUG=1
       ;;
     --)
       shift
@@ -144,7 +144,7 @@ while [ $# -gt 1 ]; do
 done
 
 # Get the non-optional/last argument for the SCRIPTNAME
-[[ -n $1 ]] && SCRIPTNAME="$1"
+[[ -n $1 ]] && export SCRIPTNAME="$1"
 
 # Prepare log file (will fix this later)
 #mkdir -p $(dirname $LOG)  # Ensure the logging directory exists
@@ -156,12 +156,14 @@ done
 if [ ! -n "$SERVER" ]; then
   echo -n "Enter the name of the GitHub server (i.e. github.com) and press [ENTER]: "
   read SERVER
+  export SERVER=$SERVER
 fi
 
 # Check that we have a SCRIPTNAME to work with
 if [ ! -n "$SCRIPTNAME" ]; then
   echo -n "Enter the name of the script (i.e. get-collaborators) and press [ENTER]: "
   read SCRIPTNAME
+  export SCRIPTNAME=$SCRIPTNAME
 fi
 
 # +---------------------------------------------------------------------------+

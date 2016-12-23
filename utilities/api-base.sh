@@ -7,21 +7,22 @@
 #
 
 # Reset environment
-APIBASE=
-HTTPHEADERS="Accept: application/vnd.github.v3+json"
+export APIBASE=
+export HTTPHEADERS="Accept: application/vnd.github.v3+json"
 
 # Check if we have a valid SERVER parameter
 if [ ! -n "$SERVER" ]; then
   echo -n "Enter the name of the GitHub server (i.e. github.com) and press [ENTER]: "
   read SERVER
+  export SERVER=$SERVER
 fi
 
 # Determine if this is for the public github.com
 if [ "$SERVER" == "github.com" ]; then
-  APIBASE="https://api.github.com";
+  export APIBASE="https://api.github.com";
   printf "Checking GitHub API connectivity...";
 else
-  APIBASE="https://$SERVER/api/v3";
+  export APIBASE="https://$SERVER/api/v3";
   printf "Checking connectivity to GitHub Enterprise at '$APIBASE'...";
 fi
 

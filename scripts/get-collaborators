@@ -21,12 +21,14 @@ GITHUB_ADMIN_ENABLED=1
 if [ ! -n "$APIBASE" ]; then
   echo -n "Enter the API base url of the GitHub server (i.e. https://api.github.com) and press [ENTER]: "
   read APIBASE
+  export APIBASE=$APIBASE
 fi
 
 # Check that we have an OWNER to work with
 if [ ! -n "$OWNER" ]; then
   echo -n "Enter the name of the GitHub Owner and press [ENTER]: "
   read OWNER
+  export OWNER=$OWNER
 fi
 
 # +---------------------------------------------------------------------------+
@@ -34,4 +36,4 @@ fi
 # +---------------------------------------------------------------------------+
 
 # Call module
-. ./modules/get-collaborators.py
+python ./scripts/modules/get-collaborators.py
