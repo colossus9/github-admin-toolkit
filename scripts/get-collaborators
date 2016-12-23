@@ -33,5 +33,5 @@ fi
 # | Perform work.                                                             |
 # +---------------------------------------------------------------------------+
 
-# Build GET
-echo "Build get command"
+# Call module
+. ./modules/get-collaborators.py
