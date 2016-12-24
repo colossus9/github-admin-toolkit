@@ -31,16 +31,6 @@ if [ ! -n "$OWNER" ]; then
   export OWNER=$OWNER;
 fi
 
-# Check that we have an AUTH token to use for the connection
-if [ ! -n "$AUTH" ]; then
-  echo "Enter a GitHub Personal Access Token to authenticate with and press [ENTER]";
-  echo "(Note: A token for this server can be created at https://$SERVER/settings/tokens)";
-  echo -n ": ";
-  read AUTH;
-  export AUTH=$AUTH;
-fi
-
-
 # +---------------------------------------------------------------------------+
 # | Perform work.                                                             |
 # +---------------------------------------------------------------------------+
