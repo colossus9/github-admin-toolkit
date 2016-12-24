@@ -19,6 +19,7 @@
 #/   -s | --server  The GitHub [Enterprise] server to connect to (Ex: github.com)
 #/   -o | --owner   The GitHub owner name on the server.
 #/   -r | --repo    The GitHub repository name on the server.
+#/   -a | --auth    Personal Access Token for endpoints that require authentication
 #/   -d | --debug   (Optional) If specified, show debug output.
 #/   <scriptname>   The name of the script to execute.
 #/ -------------------------------------------------------------------
@@ -127,6 +128,10 @@ while [ $# -gt 1 ]; do
       export REPO="$2"
       shift
       ;;
+    -a|--auth)
+      export AUTH="$2"
+      shift
+      ;;
     -d|--debug)
       export DEBUG=1
       ;;
@@ -179,6 +184,7 @@ if [ -n "$DEBUG" ]; then
   [ -n "$SERVER" ] && printf "  --> SERVER=$SERVER\n"
   [ -n "$OWNER" ] && printf "  --> OWNER=$OWNER\n"
   [ -n "$REPO" ] && printf "  --> REPO=$REPO\n"
+  [ -n "$AUTH" ] && printf "  --> AUTH=$AUTH\n"
   [ -n "$LOG" ] && printf "  --> LOG=$LOG\n"
   [ -n "$SCRIPTNAME" ] && printf "  --> SCRIPTNAME=$SCRIPTNAME\n"
   [ -n "$DEBUG" ] && printf "  --> DEBUG=true\n"

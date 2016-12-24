@@ -19,21 +19,31 @@ GITHUB_ADMIN_ENABLED=1
 
 # Check that we have an APIBASE to connect to
 if [ ! -n "$APIBASE" ]; then
-  echo -n "Enter the API base url of the GitHub server (i.e. https://api.github.com) and press [ENTER]: "
-  read APIBASE
-  export APIBASE=$APIBASE
-fi
+  echo -n "Enter the API base url of the GitHub server (i.e. https://api.github.com) and press [ENTER]: ";
+  read APIBASE;
+  export APIBASE=$APIBASE;
+fi;
 
 # Check that we have an OWNER to work with
 if [ ! -n "$OWNER" ]; then
-  echo -n "Enter the name of the GitHub Owner and press [ENTER]: "
-  read OWNER
-  export OWNER=$OWNER
+  echo -n "Enter the name of the GitHub Owner and press [ENTER]: ";
+  read OWNER;
+  export OWNER=$OWNER;
 fi
+
+# Check that we have an AUTH token to use for the connection
+if [ ! -n "$AUTH" ]; then
+  echo "Enter a GitHub Personal Access Token to authenticate with and press [ENTER]";
+  echo "(Note: A token for this server can be created at https://$SERVER/settings/tokens)";
+  echo -n ": ";
+  read AUTH;
+  export AUTH=$AUTH;
+fi
+
 
 # +---------------------------------------------------------------------------+
 # | Perform work.                                                             |
 # +---------------------------------------------------------------------------+
 
 # Call module
-python ./scripts/modules/get-collaborators.py
+python ./scripts/modules/github-admin-toolkit.py get-collaborators
