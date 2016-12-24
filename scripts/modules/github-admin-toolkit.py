@@ -11,25 +11,10 @@ import requests
 import sys
 import urllib2
 
-dictGitHubAdminToolkit     = {}    # Contains list of available github-admin-toolkit methods
 debug = None        # Debug mode flag
 py3 = False         # Detect python version
 
-def createScriptDictionary():
-    
-    # A map to call the appropriate python method    
-    global dictGitHubAdminToolkit
-    
-    # List available methods in the dictionary
-    dictGitHubAdminToolkit['get-collaborators'] = "getCollaborators"
-    
-#end createScriptDictionary()-------------------------------
-
 def main():
-
-    # A map to call the appropriate python method
-    createScriptDictionary()
-    global dictGitHubAdminToolkit
 
     # Check if DEBUG mode is set
     global debug
@@ -64,7 +49,7 @@ def main():
     
     # The first argument should be the name of the method we will use. Use the dictionary to call the correct method
     if len(sys.argv) > 0:
-        getattr(sys.modules[__name__], dictGitHubAdminToolkit[sys.argv[1]])()        
+        getattr(sys.modules[__name__], str(sys.argv[1]))()        
     else:
         print "ERROR (" + sys.argv[0] + "): We need the method to run passed in as the first argument."
         _exit(1)

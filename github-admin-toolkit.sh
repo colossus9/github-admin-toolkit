@@ -16,7 +16,7 @@
 #/ OPTIONS:
 #/   -h | --help    Display this help message.
 #/   -l | --list    List available scripts to execute
-#/   -s | --server  The GitHub [Enterprise] server to connect to (Ex: github.com)
+#/   -s | --server  (Required) The GitHub [Enterprise] server to connect to (Ex: github.com)
 #/   -o | --owner   The GitHub owner name on the server.
 #/   -r | --repo    The GitHub repository name on the server.
 #/   -a | --auth    Personal Access Token for endpoints that require authentication
