@@ -15,7 +15,7 @@ import urllib2
 debug           = None                              # Debug mode flag
 py3             = False                             # Detect python version
 httpHeaders     = {}                                # HTTP header value
-acceptHeader    = "application/vnd.github.v3+json"  # Accept header for HTTP call
+acceptHeader    = 'application/vnd.github.v3+json'  # Accept header for HTTP call
 auth            = None                              # If needed, the Authorization token
 
 
@@ -39,17 +39,22 @@ def getContributors():
     # Check if the repo was provided
     if os.environ.get('REPO'):
         
-        debugMsg('Both OWNER/REPO provided (' + getOwner() + "/" + getRepo() + ')')
-        responseCode, responseJSON = getHTTPResponse('/repos/' + getOwner() + '/' + getRepo() + '/contributors')
-        debugMsg('code=' + str(responseCode) + '; body=' + str(responseJSON))
+        debugMsg('Both OWNER/REPO provided (' + getOwner() + '/' + getRepo() + ')')
+        code, response = getHTTPResponse('/repos/' + getOwner() + '/' + getRepo() + '/contributors')
         
+        # Parse data
+        debugMsg('Parsing Response Body')
+        for item in response:
+            for key, value in item.items():
+                if key == 'login':
+                    print value #+ '(' + getGitHubUser(value) + ')'
+
     else:
         
         debugMsg('Only OWNER provided (' + getOwner() + ')')
         
         # Get data with the provided owner first
-        responseCode, responseJSON = getHTTPResponse('/orgs/' + getOwner())
-        debugMsg('code=' + str(responseCode) + '; body=' + str(responseJSON))
+        code, response = getHTTPResponse('/orgs/' + getOwner())
     
 
 #end getContributors()-------------------------------
@@ -99,16 +104,44 @@ def getHTTPResponse(path):
         debugMsg('Header items are ' + str(request.header_items()))
         response = urlopen(request)
     except HTTPError as e:
-        errMsg("HTTP Status Code " + str(e.code) + ". Please check your inputs and try again.")
+        errMsg('HTTP Status Code ' + str(e.code) + '. Please check your inputs and try again.')
         _exit(1)
     except URLError as e:
-        errMsg("URLError Exception. Please check the connection string and the network and try again.")
+        errMsg('URLError Exception. Please check the connection string and the network and try again.')
         _exit(1)
     else:
         # Return status and JSON response
-        return response.code, json.loads(response.read())
+        debugMsg('code=' + str(response.code) + '; body=' + str(response)
+        return response.code, json.load(response)
 
 #end getHTTPResponse()-------------------------------
+
+def getGitHubUser(username):
+    
+    debugMsg('Entered getGitHubUser()')
+    
+    # Define the GitHub User
+    gitHubUser = None
+    name = None
+    email = None
+    
+    # Use API call to get user data
+    code, response = getHTTPResponse('/users/' + username)
+    
+    # Parse the data
+    for item in response:
+        for key, value in item.items():
+            if key == 'name':
+                name = value
+            if key == 'email':
+                email = value
+    
+    # Format the name before returning it
+    gitHubUser = name + ' <' + email + '>'
+    
+    return gitHubUser
+    
+#end getGitHubUser()-------------------------------
 
 def getPythonVersion():
     
@@ -137,7 +170,7 @@ def setDebug():
 def debugMsg(msg):
 
     if getDebug():
-        print sys.argv[0] + ": " + msg
+        print sys.argv[0] + ': ' + msg
     
 #end debugMsg()-------------------------------
 
@@ -145,7 +178,7 @@ def errMsg(msg):
     
     debugMsg('Entered errMsg()')
     
-    print "ERROR (" + sys.argv[0] + "): " + msg
+    print 'ERROR (' + sys.argv[0] + '): ' + msg
     
 #end errMsg()-------------------------------
 
@@ -160,7 +193,7 @@ def getAPIBase():
     
     else:
         
-        userInput = "Enter the API base url of the GitHub server (i.e. https://api.github.com) and press [ENTER]: "
+        userInput = 'Enter the API base url of the GitHub server (i.e. https://api.github.com) and press [ENTER]: '
         if py3:
             return str(input(userInput))
         else:
@@ -179,7 +212,7 @@ def getServer():
     
     else:
         
-        userInput = "Enter the name of the GitHub SERVER and press [ENTER]: "
+        userInput = 'Enter the name of the GitHub SERVER and press [ENTER]: '
         if py3:
             return str(input(userInput))
         else:
@@ -199,7 +232,7 @@ def getHTTPHeader(header):
     
     # Check if we are requesting an Authorization header
     if header == 'Authorization':
-        httpHeaders[header] = "token " + getAuth()
+        httpHeaders[header] = 'token ' + getAuth()
     
     return httpHeaders[header]
 
@@ -216,7 +249,7 @@ def getOwner():
     
     else:
         
-        userInput = "Enter the name of the GitHub OWNER and press [ENTER]: "
+        userInput = 'Enter the name of the GitHub OWNER and press [ENTER]: '
         if py3:
             return str(input(userInput))
         else:
@@ -235,7 +268,7 @@ def getRepo():
     
     else:
         
-        userInput = "Enter the name of the GitHub REPO and press [ENTER]: "
+        userInput = 'Enter the name of the GitHub REPO and press [ENTER]: '
         if py3:
             return str(input(userInput))
         else:
@@ -269,11 +302,11 @@ def setAuth():
     
     else:
         
-        print "Enter a GitHub Personal Access Token to authenticate with and press [ENTER]";
-        print "(Note: A token for this server can be created at https://" + str(getServer()) + "/settings/tokens)";
+        print 'Enter a GitHub Personal Access Token to authenticate with and press [ENTER]';
+        print '(Note: A token for this server can be created at https://' + str(getServer()) + '/settings/tokens)';
         
-        userInput = ": "
-        token = ""
+        userInput = ': '
+        token = ''
         
         if py3:
             auth = str(input(userInput))
@@ -292,7 +325,7 @@ def getScriptName():
         return str(os.environ['SCRIPTNAME'])
     
     else:
-        errMsg("The SCRIPTNAME could not properly be determined!")
+        errMsg('The SCRIPTNAME could not properly be determined!')
         _exit(1)
 
 #end getServer()-------------------------------
@@ -322,38 +355,38 @@ def main():
     py3 = getPythonVersion() > 2    
     
     # Display values if in debug mode
-    debugMsg("In debug mode")
-    debugMsg("Python version " + str(getPythonVersion()))
+    debugMsg('In debug mode')
+    debugMsg('Python version ' + str(getPythonVersion()))
         
     if os.environ.get('APIBASE'):
-        debugMsg("APIBASE set to '" + os.environ['APIBASE'] + "'")
+        debugMsg('APIBASE set to ' + os.environ['APIBASE'])
     if os.environ.get('SERVER'):
-        debugMsg("SERVER set to '" + os.environ['SERVER'] + "'")
+        debugMsg('SERVER set to ' + os.environ['SERVER'])
     if os.environ.get('OWNER'):
-        debugMsg("OWNER set to '" + os.environ['OWNER'] + "'")
+        debugMsg('OWNER set to ' + os.environ['OWNER'])
     if os.environ.get('REPO'):
-        debugMsg("REPO set to '" + os.environ['REPO'] + "'")
+        debugMsg('REPO set to ' + os.environ['REPO'])
     if os.environ.get('AUTH'):
-        debugMsg("AUTH set to '" + os.environ['AUTH'] + "'")
+        debugMsg('AUTH set to ' + os.environ['AUTH'])
     if os.environ.get('SCRIPTNAME'):
-        debugMsg("SCRIPTNAME set to '" + os.environ['SCRIPTNAME'] + "'")
+        debugMsg('SCRIPTNAME set to ' + os.environ['SCRIPTNAME'])
     if len(sys.argv) > 0:
-        debugMsg("Argument list is '" + str(sys.argv) + "'")
+        debugMsg('Argument list is ' + str(sys.argv))
     
-    debugMsg(" ")
+    debugMsg(' ')
     
     # The first argument should be the name of the method we will use.
     if len(sys.argv) > 0:
         
-        debugMsg("Calling " + str(sys.argv[1]) + "()")
+        debugMsg('Calling ' + str(sys.argv[1]) + '()')
 
         # Let's do some work.
-        debugMsg(getScriptName() + ": Fetching...")
+        debugMsg(getScriptName() + ': Fetching...')
         
         try:
             getattr(sys.modules[__name__], str(sys.argv[1]))()  # Call the method with the name of the first argument
-        except:
-            errMsg('Problem encountered while running ' + str(sys.argv[1]))
+        except Exception as e:
+            errMsg('Problem encountered while running ' + str(sys.argv[1]) + '; ' + str(e))
     
     else:
         errMsg('We need the method to run passed in as the first argument.')
