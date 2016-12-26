@@ -24,7 +24,7 @@ auth            = None                              # If needed, the Authorizati
 
  +--------------------------------------------+
  |                                            |
- |  GitHub Admin Toolkit script logic         |
+ |  GitHub Admin Toolkit                      |
  |                                            |
  +--------------------------------------------+
  
@@ -34,8 +34,7 @@ auth            = None                              # If needed, the Authorizati
 
 def getCollaborators():
 
-    if getDebug():
-        debugMsg('Entered getCollaborators()')
+    debugMsg('Entered getCollaborators()')
         
     # Check if OWNER exists on the GitHub server
     responseCode, responseJSON = getHTTPResponse('/orgs/' + getOwner())
@@ -79,18 +78,20 @@ def getHTTPResponse(path):
     
     # ...including Authentication header (if needed)
     if not auth == None:        
-        if getDebug():
-            debugMsg('Using Authentication Header')            
+        debugMsg('Using Authentication Header')            
         request.add_header('Authorization', getHTTPHeader('Authorization'))
     
     # Get the response
     try:
         response = urlopen(request)
     except HTTPError as e:
-        errMsg("HTTP Status Code is " + str(e.code) + ". Please check your inputs and try again.")
+        errMsg("HTTP Status Code " + str(e.code) + ". Please check your inputs and try again.")
+        _exit(1)
+    except URLError as e:
+        errMsg("URLError Exception. Please check the connection string and the network and try again.")
         _exit(1)
     else:
-        # Return JSON object
+        # Return status and JSON response
         return response.code, json.loads(response.read())
 
 #end getHTTPResponse()-------------------------------
@@ -119,7 +120,8 @@ def setDebug():
 
 def debugMsg(msg):
     
-    print "(debug) " + sys.argv[0] + ": " + msg
+    if getDebug():
+        print sys.argv[0] + ": " + msg
     
 #end debugMsg()-------------------------------
 
@@ -127,7 +129,7 @@ def errMsg(msg):
     
     print "ERROR (" + sys.argv[0] + "): " + msg
     
-#end debugMsg()-------------------------------
+#end errMsg()-------------------------------
 
 def getAPIBase():
     
@@ -284,40 +286,41 @@ def main():
     py3 = getPythonVersion() > 2    
     
     # Display values if in debug mode
-    if getDebug():
+    debugMsg("In debug mode")
+    debugMsg("Python version " + str(getPythonVersion()))
         
-        debugMsg("In debug mode")
-        debugMsg("Python version " + str(getPythonVersion()))
-        
-        if os.environ.get('APIBASE'):
-            debugMsg("APIBASE set to '" + os.environ['APIBASE'] + "'")
-        if os.environ.get('SERVER'):
-            debugMsg("SERVER set to '" + os.environ['SERVER'] + "'")
-        if os.environ.get('OWNER'):
-            debugMsg("OWNER set to '" + os.environ['OWNER'] + "'")
-        if os.environ.get('REPO'):
-            debugMsg("REPO set to '" + os.environ['REPO'] + "'")
-        if os.environ.get('AUTH'):
-            debugMsg("AUTH set to '" + os.environ['AUTH'] + "'")
-        if os.environ.get('SCRIPTNAME'):
-            debugMsg("SCRIPTNAME set to '" + os.environ['SCRIPTNAME'] + "'")
-        if len(sys.argv) > 0:
-            debugMsg("Argument list is '" + str(sys.argv) + "'")
-        
-        print " "
+    if os.environ.get('APIBASE'):
+        debugMsg("APIBASE set to '" + os.environ['APIBASE'] + "'")
+    if os.environ.get('SERVER'):
+        debugMsg("SERVER set to '" + os.environ['SERVER'] + "'")
+    if os.environ.get('OWNER'):
+        debugMsg("OWNER set to '" + os.environ['OWNER'] + "'")
+    if os.environ.get('REPO'):
+        debugMsg("REPO set to '" + os.environ['REPO'] + "'")
+    if os.environ.get('AUTH'):
+        debugMsg("AUTH set to '" + os.environ['AUTH'] + "'")
+    if os.environ.get('SCRIPTNAME'):
+        debugMsg("SCRIPTNAME set to '" + os.environ['SCRIPTNAME'] + "'")
+    if len(sys.argv) > 0:
+        debugMsg("Argument list is '" + str(sys.argv) + "'")
+    
+    debugMsg(" ")
     
     # The first argument should be the name of the method we will use.
     if len(sys.argv) > 0:
         
-        if getDebug():
-            debugMsg("Calling " + str(sys.argv[1]) + "()")
+        debugMsg("Calling " + str(sys.argv[1]) + "()")
 
         # Let's do some work.
-        print getScriptName() + ": Fetching..."
-        getattr(sys.modules[__name__], str(sys.argv[1]))()
+        debugMsg(getScriptName() + ": Fetching...")
+        
+        try:
+            getattr(sys.modules[__name__], str(sys.argv[1]))()  # Call the method with the name of the first argument
+        except:
+            errMsg('Problem encountered while running ' + str(sys.argv[1]))
     
     else:
-        errMsg("We need the method to run passed in as the first argument.")
+        errMsg('We need the method to run passed in as the first argument.')
         _exit(1)
     
 
@@ -327,8 +330,7 @@ def _exit(code):
 
     """ Performs proper clean up before exiting
     """
-    if getDebug():
-        debugMsg('Exit code = ' + str(code))
+    debugMsg('Exit code = ' + str(code))
     sys.exit(code)
 
 #end _exit()-------------------------------

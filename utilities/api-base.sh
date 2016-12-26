@@ -20,15 +20,17 @@ fi
 # Determine if this is for the public github.com
 if [ "$SERVER" == "github.com" ]; then
   export APIBASE="https://api.github.com";
-  printf "Checking GitHub API connectivity...";
+  [[ -n "$DEBUG" ]] && printf "Checking GitHub API connectivity...";
 else
   export APIBASE="https://$SERVER/api/v3";
-  printf "Checking connectivity to GitHub Enterprise at '$APIBASE'...";
+  [[ -n "$DEBUG" ]] && printf "Checking connectivity to GitHub Enterprise at '$APIBASE'...";
 fi
 
 # Verify the endpoint is available
 if curl --fail -s -o "/dev/null" -H "$HTTPHEADERS" $APIBASE; then
-  printf "OK\n\n";
+  if [ -n "$DEBUG" ]; then
+    printf "OK\n\n";
+  fi
 else
   printf "\nERROR: The provided endpoint is not valid or it cannot be reached. Please check your network connection and try again.\n\n";
   exit 1;

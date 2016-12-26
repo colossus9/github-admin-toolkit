@@ -49,17 +49,20 @@ function list
 function header
 {
   # ------------------------------------------
-  # Function to print the header
+  # Function to print the header if in debug
   # ------------------------------------------
 
-  printf "\n"
-  printf " ------------------------------------------------------------\n"
-  printf "  GitHub Administrator Toolkit\n"
-  printf "  $(date)\n"
-  printf "  Running $0\n"
-  [ -n "$DEBUG" ] && printf "  (debug) Args: $ARGS\n"
-  printf " ------------------------------------------------------------\n"
-  printf "\n"
+  if [ -n "$DEBUG" ]; then
+    printf "\n"
+    printf " ------------------------------------------------------------\n"
+    printf "  GitHub Administrator Toolkit\n"
+    printf "  $(date)\n"
+    printf "  Running $0\n"
+    printf "  Args: $ARGS\n"
+    printf " ------------------------------------------------------------\n"
+    printf "\n"
+  fi
+
 }
 
 # Set standard Messages
@@ -180,7 +183,7 @@ header
 
 # If in debug mode, display values
 if [ -n "$DEBUG" ]; then
-  printf "\n(debug) Displaying parameter values:\n"
+  printf "\nDisplaying parameter values:\n"
   [ -n "$SERVER" ] && printf "  --> SERVER=$SERVER\n"
   [ -n "$OWNER" ] && printf "  --> OWNER=$OWNER\n"
   [ -n "$REPO" ] && printf "  --> REPO=$REPO\n"

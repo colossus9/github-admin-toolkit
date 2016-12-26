@@ -15,7 +15,7 @@ export AVAIL_SCRIPTS="./avail-scripts.txt"    # Placeholder to build available s
 export ISAVAIL=0
 
 # Debug
-[ -n "$DEBUG" ] && echo "(debug) Running script-loader.sh"
+[ -n "$DEBUG" ] && echo "Running script-loader.sh"
 
 # Get the list of eligible scripts to execute with github-admin-toolkit:
 rm -rf $AVAIL_SCRIPTS  # Clear the table
