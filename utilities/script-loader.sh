@@ -32,7 +32,7 @@ done
 
 # Inform user if none were available
 if [ "$ISAVAIL" -ne "1" ]; then
-  printf "ERROR: The script '$SCRIPTNAME' is not available. List the available scripts with \`./github-admin-toolkit.sh --list\`\n\n";
+  printf "\nERROR: The script '$SCRIPTNAME' is not available. List the available scripts with \`./github-admin-toolkit.sh --list\`\n\n";
   exit 1;
 else
   . ./utilities/api-base.sh; # Build and check the API Base URL

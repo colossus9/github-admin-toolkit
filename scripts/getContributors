@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 #
-# Filename:     getCollaborators
+# Filename:     getContributors
 #
-# Description:  Get a list of collaborators for the specified
+# Description:  Get a list of contributors for the specified
 #               GitHub OWNER/REPO (REPO is optional).
 #
 
@@ -10,7 +10,7 @@
 # | Set Attribute(s) for the GitHub Admin Toolkit.                            |
 # | Disable this script by setting GITHUB_ADMIN_ENABLED=0                     |
 # +---------------------------------------------------------------------------+
-GITHUB_ADMIN_DESC="List all collaborators for the specified OWNER/REPO."
+GITHUB_ADMIN_DESC="List all contributors for the specified OWNER/REPO. If no repo provided, then list contributors for org."
 GITHUB_ADMIN_ENABLED=1
 
 # +---------------------------------------------------------------------------+
@@ -36,4 +36,4 @@ fi
 # +---------------------------------------------------------------------------+
 
 # Call module
-python ./scripts/modules/github-admin-toolkit.py getCollaborators
+python ./scripts/modules/github-admin-toolkit.py getContributors

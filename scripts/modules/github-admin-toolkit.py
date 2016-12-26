@@ -32,18 +32,27 @@ auth            = None                              # If needed, the Authorizati
 
 
 
-def getCollaborators():
+def getContributors():
 
-    debugMsg('Entered getCollaborators()')
+    debugMsg('Entered getContributors()')
+    
+    # Check if the repo was provided
+    if os.environ.get('REPO'):
         
-    # Check if OWNER exists on the GitHub server
-    responseCode, responseJSON = getHTTPResponse('/orgs/' + getOwner())
+        debugMsg('Both OWNER/REPO provided (' + getOwner() + "/" + getRepo() + ')')
+        responseCode, responseJSON = getHTTPResponse('/repos/' + getOwner() + '/' + getRepo() + '/contributors')
+        debugMsg('code=' + str(responseCode) + '; body=' + str(responseJSON))
+        
+    else:
+        
+        debugMsg('Only OWNER provided (' + getOwner() + ')')
+        
+        # Get data with the provided owner first
+        responseCode, responseJSON = getHTTPResponse('/orgs/' + getOwner())
+        debugMsg('code=' + str(responseCode) + '; body=' + str(responseJSON))
     
-    print (str(responseCode) + str(responseJSON))
-    
-    # Check if REPO provided. If not, iterate over all repos. 
 
-#end get-collaborators()-------------------------------
+#end getContributors()-------------------------------
 
 
 
@@ -59,11 +68,15 @@ def getCollaborators():
 
 def getHTTPResponse(path):
     
+    debugMsg('Entered getHTTPResponse()')
+    
     global auth
     
     # Build the request object
     request = None
     url = getAPIBase() + path
+    
+    debugMsg('url is ' + str(url))
     
     # Load appropriate HTTP libs
     try:
@@ -83,6 +96,7 @@ def getHTTPResponse(path):
     
     # Get the response
     try:
+        debugMsg('Header items are ' + str(request.header_items()))
         response = urlopen(request)
     except HTTPError as e:
         errMsg("HTTP Status Code " + str(e.code) + ". Please check your inputs and try again.")
@@ -97,6 +111,8 @@ def getHTTPResponse(path):
 #end getHTTPResponse()-------------------------------
 
 def getPythonVersion():
+    
+    debugMsg('Entered getPythonVersion()')
     
     return sys.version_info[0]
 
@@ -119,7 +135,7 @@ def setDebug():
 #end setDebug()-------------------------------
 
 def debugMsg(msg):
-    
+
     if getDebug():
         print sys.argv[0] + ": " + msg
     
@@ -127,11 +143,15 @@ def debugMsg(msg):
 
 def errMsg(msg):
     
+    debugMsg('Entered errMsg()')
+    
     print "ERROR (" + sys.argv[0] + "): " + msg
     
 #end errMsg()-------------------------------
 
 def getAPIBase():
+    
+    debugMsg('Entered getAPIBase()')
     
     # Get the value for the APIBASE
     
@@ -150,6 +170,8 @@ def getAPIBase():
 
 def getServer():
     
+    debugMsg('Entered getServer()')
+    
     # Get the value for the SERVER
     
     if os.environ.get('SERVER'):
@@ -167,6 +189,8 @@ def getServer():
 
 def getHTTPHeader(header):
     
+    debugMsg('Entered getHTTPHeader()')
+    
     global httpHeaders
     global acceptHeader
     
@@ -182,6 +206,8 @@ def getHTTPHeader(header):
 #end getHTTPHeader()-------------------------------
 
 def getOwner():
+    
+    debugMsg('Entered getOwner()')
     
     # Get the value for the OWNER
     
@@ -200,6 +226,8 @@ def getOwner():
 
 def getRepo():
     
+    debugMsg('Entered getRepo()')
+    
     # Get the value for the REPO
     
     if os.environ.get('REPO'):
@@ -217,6 +245,8 @@ def getRepo():
 
 def getAuth():
     
+    debugMsg('Entered getAuth()')
+    
     global auth
     
     if auth == None:
@@ -227,6 +257,8 @@ def getAuth():
 #end getRepo()-------------------------------
 
 def setAuth():
+    
+    debugMsg('Entered setAuth()')
     
     global auth
     
@@ -251,6 +283,8 @@ def setAuth():
 #end setAuth()-------------------------------
 
 def getScriptName():
+    
+    debugMsg('Entered getScriptName()')
     
     # Get the value for the SCRIPTNAME
     
@@ -278,6 +312,8 @@ def getScriptName():
 
 
 def main():
+    
+    debugMsg('Entered main()')
 
     # Check if DEBUG mode is set
     setDebug()
@@ -327,6 +363,8 @@ def main():
 #end main()-------------------------------
 
 def _exit(code):
+    
+    debugMsg('Entered _exit(code)')
 
     """ Performs proper clean up before exiting
     """

@@ -14,14 +14,15 @@
 #/ is required, you will be prompted to enter your credentials.
 #/
 #/ OPTIONS:
-#/   -h | --help    Display this help message.
-#/   -l | --list    List available scripts to execute
-#/   -s | --server  (Required) The GitHub [Enterprise] server to connect to (Ex: github.com)
-#/   -o | --owner   The GitHub owner name on the server.
-#/   -r | --repo    The GitHub repository name on the server.
-#/   -a | --auth    Personal Access Token for endpoints that require authentication
-#/   -d | --debug   (Optional) If specified, show debug output.
-#/   <scriptname>   The name of the script to execute.
+#/   -h | --help                                Display this help message.
+#/   -l | --list                                List available scripts to execute
+#/   -s | --server [github.com|ghe.company.com] (Required) The GitHub [Enterprise] server to connect
+#/   -o | --owner <OWNER>                       The GitHub owner name on the server.
+#/   -r | --repo <REPO>                         The GitHub repository name on the server.
+#/   -a | --auth <TOKEN>                        Personal Access Token for endpoints that need auth
+#    -f | --format [plain|slack|flowdock]       (Optional) Select the output format to use (not ready)
+#/   -d | --debug                               (Optional) If specified, show debug output.
+#/   <scriptname>                               (Required) The name of the script to execute.
 #/ -------------------------------------------------------------------
 #/
 
