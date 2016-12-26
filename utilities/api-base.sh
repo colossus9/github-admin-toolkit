@@ -32,6 +32,6 @@ if curl --fail -s -o "/dev/null" -H "$HTTPHEADERS" $APIBASE; then
     printf "OK\n\n";
   fi
 else
-  printf "\nERROR (api-base.sh): The provided endpoint is not valid or it cannot be reached. Please check your network connection and try again.\n\n";
+  printf "\nERROR (api-base.sh): The provided endpoint '$APIBASE' is not valid or it cannot be reached. Please check your network connection and try again.\n\n";
   exit 1;
 fi

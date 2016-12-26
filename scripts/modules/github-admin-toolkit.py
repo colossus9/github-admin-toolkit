@@ -47,7 +47,7 @@ def getContributors():
         for item in response:
             for key, value in item.items():
                 if key == 'login':
-                    print value #+ '(' + getGitHubUser(value) + ')'
+                    print value + ' ' + getGitHubUser(value)
 
     else:
         
@@ -111,14 +111,15 @@ def getHTTPResponse(path):
         _exit(1)
     else:
         # Return status and JSON response
-        debugMsg('code=' + str(response.code) + '; body=' + str(response)
-        return response.code, json.load(response)
+        body = json.load(response)
+        debugMsg('code=' + str(response.code) + '; body=' + str(body))
+        return response.code, body
 
 #end getHTTPResponse()-------------------------------
 
 def getGitHubUser(username):
     
-    debugMsg('Entered getGitHubUser()')
+    debugMsg('Entered getGitHubUser(' + username + ')')
     
     # Define the GitHub User
     gitHubUser = None
@@ -129,15 +130,22 @@ def getGitHubUser(username):
     code, response = getHTTPResponse('/users/' + username)
     
     # Parse the data
-    for item in response:
-        for key, value in item.items():
-            if key == 'name':
-                name = value
-            if key == 'email':
-                email = value
+    for key, value in response.items():
+        if key == 'name':
+            name = str(value)
+        if key == 'email':
+            email = str(value)
     
     # Format the name before returning it
-    gitHubUser = name + ' <' + email + '>'
+    if name == 'None':
+        if email == 'None':
+            gitHubUser = str('')
+        else:
+            gitHubUser = str('(<' + email + '>}')
+    elif email == 'None':
+        gitHubUser = str('(' + name + ')')
+    else:
+        gitHubUser = str('(' + name + ' <' + email + '>)')
     
     return gitHubUser
     
