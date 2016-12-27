@@ -27,13 +27,13 @@ else
 fi
 
 # Verify the endpoint is available
-if curl --fail -s -o "/dev/null" -H "$HTTPHEADERS" $APIBASE; then
+if curl --fail -s --connect-timeout 10 -o "/dev/null" -H "$HTTPHEADERS" $APIBASE; then
   if [ -n "$DEBUG" ]; then
     export VALIDCONN="1";
     printf "OK\n\n";
   fi
 else
-  export HTTPCODE=`curl -s -o /dev/null/ -w "%{http_code}" -H "$HTTPHEADERS" $APIBASE`;
+  export HTTPCODE=`curl -s --connect-timeout 10 -o /dev/null/ -w "%{http_code}" -H "$HTTPHEADERS" $APIBASE`;
   [[ -n "$DEBUG" ]] && echo "curl httpcode is $HTTPCODE";
   if [ "$HTTPCODE" -eq "403" ]; then
     if [[ ! -n "$AUTH" ]]; then
@@ -41,7 +41,7 @@ else
       exit 1;
     fi;
   else
-    printf "\nERROR (api-base.sh): The provided endpoint '$APIBASE' is not valid or it cannot be reached. Please check your network connection and try again.\n\n";
+    printf "\nERROR (api-base.sh): The provided endpoint '$APIBASE' is not valid or it cannot be reached. Please check your network connection and try again. You may also want to try the proxy option (-p|--proxy) if you are behind a corporate firewall.\n\n";
     exit 1;
   fi;
 fi

@@ -8,7 +8,6 @@
 
 import json
 import os
-import requests
 import sys
 import urllib2
 

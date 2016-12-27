@@ -65,7 +65,7 @@ To run this tool from a Linux-based command line:
     ./github-admin-toolkit.sh --list
     ```
 
-5. To run a script from the command line, specify it as an argument to `github-admin-toolkit.sh`. Below is an example:
+5. To run a script from the command line, specify it as an argument to `github-admin-toolkit.sh`. You can either specify **github.com** as a server, or you can specify a **GitHub Enterprise** server. Below is an example:
 
     ```
     ./github-admin-toolkit.sh --server github.com --owner git --repo git getContributors
