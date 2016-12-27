@@ -53,18 +53,67 @@ def getContributors():
         for user in response:
             for key, value in user.items():
                 if key == 'login':
-                    login = str(value + ' (' + scheme + '://' + getServer() + '/' + value + ')')
+                    login = str(value)
                 if key == 'contributions':
                     contributions = str(value)
-            print str(login + ' ' + contributions)
+            print str(login + ' (' + scheme + '://' + getServer() + '/' + login + ')' + ' ' + contributions)
 
     else:
-        
+
         debugMsg('Only OWNER provided (' + getOwner() + ')')
-        
+
         # Get data with the provided owner first
-        scheme, code, response = getHTTPResponse('/orgs/' + getOwner())
-    
+        scheme, code, response = getHTTPResponse('/orgs/' + getOwner() + '/repos')
+
+        # Parse data
+        debugMsg('Parsing Response Body')
+
+        # Print overall header, and then drill down
+        print 'Contributors for ' + scheme + '://' + getServer() + '/' + getOwner()
+
+        # Keep track of overall org-level contributions
+        dictContributors = {}
+
+        # Build and display the output, iterate over repos
+        full_name = None
+        for repo in response:
+            for key, value in repo.items():
+                if key == 'full_name':
+                    full_name = str(value)
+                    break
+            print ' '
+            printHeaderMsg(full_name)
+
+            # Get collaborators for this repo
+            debugMsg('Getting collaborators for ' + full_name)
+            scheme, code, response = getHTTPResponse('/repos/' + full_name + '/contributors')
+
+            # Parse data
+            debugMsg('Parsing Response Body')
+
+            # Build and display the repo output
+            login = None
+            contributions = None
+            for user in response:
+                for key, value in user.items():
+                    if key == 'login':
+                        login = str(value)
+                    if key == 'contributions':
+                        contributions = str(value)
+
+                # Add to dictionary for summary and print current repo
+                if login in dictContributors:
+                    dictContributors[login] += int(contributions)
+                else:
+                    dictContributors[login] = int(contributions)
+                print str(login + ' (' + scheme + '://' + getServer() + '/' + login + ')' + ' ' + contributions)
+
+        # Finally, display summary
+        print ' '
+        printHeaderMsg(' ** Summary for ' + scheme + '://' + getServer() + '/' + getOwner() + ' ** ')
+
+        for key, value in dictContributors.items():
+            print str(key + ' (' + scheme + '://' + getServer() + '/' + key + ') ' + str(value))
 
 #end getContributors()-------------------------------
 
