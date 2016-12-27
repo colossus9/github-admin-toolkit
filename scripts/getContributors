@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+#
+# Filename:     getContributors
+#
+# Description:  Get a list of contributors for the specified
+#               GitHub OWNER/REPO (REPO is optional).
+#
+
+# +---------------------------------------------------------------------------+
+# | Set Attribute(s) for the GitHub Admin Toolkit.                            |
+# | Disable this script by setting GITHUB_ADMIN_ENABLED=0                     |
+# +---------------------------------------------------------------------------+
+GITHUB_ADMIN_DESC="List all contributors for the specified OWNER/REPO. If no repo provided, then list contributors for org."
+GITHUB_ADMIN_ENABLED=1
+
+# +---------------------------------------------------------------------------+
+# | We need a minimum set of params before we can continue. REPO is optional. |
+# +---------------------------------------------------------------------------+
+
+# Check that we have an APIBASE to connect to
+if [ ! -n "$APIBASE" ]; then
+  echo -n "Enter the API base url of the GitHub server (i.e. https://api.github.com) and press [ENTER]: ";
+  read APIBASE;
+  export APIBASE=$APIBASE;
+fi;
+
+# Check that we have an OWNER to work with
+if [ ! -n "$OWNER" ]; then
+  echo -n "Enter the name of the GitHub Owner and press [ENTER]: ";
+  read OWNER;
+  export OWNER=$OWNER;
+fi
+
+# +---------------------------------------------------------------------------+
+# | Perform work.                                                             |
+# +---------------------------------------------------------------------------+
+
+# Call module
+python ./scripts/modules/github-admin-toolkit.py getContributors
