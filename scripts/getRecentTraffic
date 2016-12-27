@@ -44,7 +44,7 @@ fi
 
 # Check that we have a AUTH token to work with
 if [ ! -n "$AUTH" ]; then
-  echo -n "Enter the GitHub Auth token and press [ENTER]: ";
+  echo -n "Enter a GitHub Auth token and press [ENTER]: ";
   read AUTH;
   export AUTH=$AUTH;
 fi
