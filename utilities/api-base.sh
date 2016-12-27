@@ -29,9 +29,19 @@ fi
 # Verify the endpoint is available
 if curl --fail -s -o "/dev/null" -H "$HTTPHEADERS" $APIBASE; then
   if [ -n "$DEBUG" ]; then
+    export VALIDCONN="1";
     printf "OK\n\n";
   fi
 else
-  printf "\nERROR (api-base.sh): The provided endpoint '$APIBASE' is not valid or it cannot be reached. Please check your network connection and try again.\n\n";
-  exit 1;
+  export HTTPCODE=`curl -s -o /dev/null/ -w "%{http_code}" -H "$HTTPHEADERS" $APIBASE`;
+  [[ -n "$DEBUG" ]] && echo "curl httpcode is $HTTPCODE";
+  if [ "$HTTPCODE" -eq "403" ]; then
+    if [[ ! -n "$AUTH" ]]; then
+      printf "\nPROBLEM: You may have reached the GitHub API Rate limit. Try adding an auth token to the request with the \`-a|--auth <token>\` option.\n\n";
+      exit 1;
+    fi;
+  else
+    printf "\nERROR (api-base.sh): The provided endpoint '$APIBASE' is not valid or it cannot be reached. Please check your network connection and try again.\n\n";
+    exit 1;
+  fi;
 fi

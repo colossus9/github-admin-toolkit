@@ -40,21 +40,21 @@ def getContributors():
     if os.environ.get('REPO'):
         
         debugMsg('Both OWNER/REPO provided (' + getOwner() + '/' + getRepo() + ')')
-        code, response = getHTTPResponse('/repos/' + getOwner() + '/' + getRepo() + '/contributors')
+        scheme, code, response = getHTTPResponse('/repos/' + getOwner() + '/' + getRepo() + '/contributors')
         
         # Parse data
         debugMsg('Parsing Response Body')
         for item in response:
             for key, value in item.items():
                 if key == 'login':
-                    print value + ' ' + getGitHubUser(value)
+                    print value + ' (' + scheme + '://' + getServer() + '/' + value + ')'
 
     else:
         
         debugMsg('Only OWNER provided (' + getOwner() + ')')
         
         # Get data with the provided owner first
-        code, response = getHTTPResponse('/orgs/' + getOwner())
+        scheme, code, response = getHTTPResponse('/orgs/' + getOwner())
     
 
 #end getContributors()-------------------------------
@@ -77,21 +77,26 @@ def getHTTPResponse(path):
     
     global auth
     
-    # Build the request object
-    request = None
-    url = getAPIBase() + path
-    
-    debugMsg('url is ' + str(url))
-    
     # Load appropriate HTTP libs
     try:
         from urllib.request import Request, urlopen, HTTPError, URLError     # Python 3
+        from urllib.parse import urlparse, urlsplit
     except:
         from urllib2 import Request, urlopen, HTTPError, URLError            # Python 2
+        from urlparse import urlparse, urlsplit
     
-    request = Request(url)
-
+    # Build the request object
+    scheme = None
+    request = None
+    url = getAPIBase() + path
+    scheme = urlsplit(url).scheme
+    
+    # Debug msgs
+    debugMsg('url = ' + str(url))    
+    debugMsg('scheme = ' + str(scheme))
+    
     # Set needed header(s)
+    request = Request(url)
     request.add_header('Accept', getHTTPHeader('Accept'))
     
     # ...including Authentication header (if needed)
@@ -104,6 +109,13 @@ def getHTTPResponse(path):
         debugMsg('Header items are ' + str(request.header_items()))
         response = urlopen(request)
     except HTTPError as e:
+        
+        # If HTTP 401 or 403, get auth token and try again
+        if str(e.code) == '401' or str(e.code) == '403':
+            setAuth()
+            scheme, code, body = getHTTPResponse(path)
+            return scheme, code, body
+        
         errMsg('HTTP Status Code ' + str(e.code) + '. Please check your inputs and try again.')
         _exit(1)
     except URLError as e:
@@ -113,43 +125,9 @@ def getHTTPResponse(path):
         # Return status and JSON response
         body = json.load(response)
         debugMsg('code=' + str(response.code) + '; body=' + str(body))
-        return response.code, body
+        return scheme, response.code, body
 
 #end getHTTPResponse()-------------------------------
-
-def getGitHubUser(username):
-    
-    debugMsg('Entered getGitHubUser(' + username + ')')
-    
-    # Define the GitHub User
-    gitHubUser = None
-    name = None
-    email = None
-    
-    # Use API call to get user data
-    code, response = getHTTPResponse('/users/' + username)
-    
-    # Parse the data
-    for key, value in response.items():
-        if key == 'name':
-            name = str(value)
-        if key == 'email':
-            email = str(value)
-    
-    # Format the name before returning it
-    if name == 'None':
-        if email == 'None':
-            gitHubUser = str('')
-        else:
-            gitHubUser = str('(<' + email + '>}')
-    elif email == 'None':
-        gitHubUser = str('(' + name + ')')
-    else:
-        gitHubUser = str('(' + name + ' <' + email + '>)')
-    
-    return gitHubUser
-    
-#end getGitHubUser()-------------------------------
 
 def getPythonVersion():
     

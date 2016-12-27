@@ -14,15 +14,16 @@
 #/ is required, you will be prompted to enter your credentials.
 #/
 #/ OPTIONS:
-#/   -h | --help                                Display this help message.
-#/   -l | --list                                List available scripts to execute
-#/   -s | --server [github.com|ghe.company.com] (Required) The GitHub [Enterprise] server to connect
-#/   -o | --owner <OWNER>                       The GitHub owner name on the server.
-#/   -r | --repo <REPO>                         The GitHub repository name on the server.
-#/   -a | --auth <TOKEN>                        Personal Access Token for endpoints that need auth
-#    -f | --format [plain|slack|flowdock]       (Optional) Select the output format to use (not ready)
-#/   -d | --debug                               (Optional) If specified, show debug output.
-#/   <scriptname>                               (Required) The name of the script to execute.
+#/   -h | --help                                   Display this help message.
+#/   -l | --list                                   List available scripts to execute
+#/   -p | --proxy <http://proxy.company.com:8080>  Set the web proxy if behind a company firewall (not ready)
+#/   -s | --server [github.com|ghe.company.com]    (Required) The GitHub [Enterprise] server to connect
+#/   -o | --owner <OWNER>                          The GitHub owner name on the server.
+#/   -r | --repo <REPO>                            The GitHub repository name on the server.
+#/   -a | --auth <TOKEN>                           Personal Access Token for endpoints that need auth
+#    -f | --format [plain|slack|flowdock]          (Optional) Select the output format to use (not ready)
+#/   -d | --debug                                  (Optional) If specified, show debug output.
+#/   <scriptname>                                  (Required) The name of the script to execute.
 #/ -------------------------------------------------------------------
 #/
 
@@ -119,6 +120,11 @@ while [ $# -gt 1 ]; do
     -l|--list)
       list
       exit 0
+      ;;
+    -p|--proxy)
+      export http_proxy="$2"
+      export https_proxy="$2"
+      shift
       ;;
     -s|--server)
       export SERVER="$2"

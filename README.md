@@ -11,7 +11,9 @@ The GitHub API provides a way to automate and gather data about the content you 
 
 Enterprise customers use a private instance to store sensitive company intellectual property, while they may also use the public github.com to open source content and contribute to public projects.
 
-## How to use the github-admin-toolkit
+# Contributing to the github-admin-toolkit
+
+This section to be moved to **CONTRIBUTING.md**.
 
 ## Adding scripts
 
@@ -27,3 +29,44 @@ Possible ideas:
 - Dockerized Hubot
     - Separate the logical modules into a scheduler (i.e. Jenkins) and make it possible for both the dockerized hubot and the local bash script to call the remote job.
     - Separate dependency on the scheduler by having the scheduler simply clone from source
+
+# How to run the tool
+
+There is currently one way to run this tool, but several in planning. As of now, you can only run this tool from the command line, but the following methods are planned:
+
+- Run from a job engine (Jenkins, Electric Commander, etc)
+- Called via hubot
+
+To run this tool from a Linux-based command line:
+
+1. (Optional) Set the web proxy if you are behind a company firewall:
+
+    ```
+    export http_proxy=http://proxy.company.com:8080
+    export https_proxy=http://proxy.company.com:8080
+    ```
+
+2. Clone the **github-admin-toolkit** repository and `cd` into the directory:
+
+    ```
+    git clone https://github.com/colossus9/github-admin-toolkit.git
+    cd github-admin-toolkit
+    ```
+
+3. To see the **help** page, run the following and available usage info will be displayed:
+
+    ```
+    ./github-admin-toolkit.sh --help
+    ```
+
+4. From the command line, this utility is intended to present one or more **scripts** to be executed and the subsequent output to be displayed. To see the list of available scripts, run the following:
+
+    ```
+    ./github-admin-toolkit.sh --list
+    ```
+
+5. To run a script from the command line, specify it as an argument to `github-admin-toolkit.sh`. Below is an example:
+
+    ```
+    ./github-admin-toolkit.sh --server github.com --owner git --repo git getContributors
+    ```
