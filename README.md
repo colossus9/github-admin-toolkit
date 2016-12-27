@@ -7,12 +7,11 @@ This toolkit provides a simple interface to interact with frequently used GitHub
 - **GitHub API Documentation:** https://developer.github.com/v3
 - **GitHub API Status:** [![Build Status](https://travis-ci.org/colossus9/github-api-status.svg?branch=master)](https://travis-ci.org/colossus9/github-api-status)
 
-# Why use the github-admin-toolkit?
+# Why use this toolkit?
 
 One of the reasons teams choose GitHub is because they want visibility in how they and their team works, who is contributing and how their project is being consumed. They also want the ability to showcase their project to others for ~advertisement purposes~ or because they are looking for outside contributors to make their project better.
 
 The **github-admin-toolkit** attempts to help bridge the gap between simple content hosting and analytics gathering to give GitHub stakeholders visibility into their projects.
-
 
 The GitHub API provides a way to automate and gather data about the content you store. The github-admin-toolkit provides a framework built around the GitHub API to let you get these statistics quickly, across a variety of platforms.
 
