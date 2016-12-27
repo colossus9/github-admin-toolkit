@@ -78,15 +78,20 @@ def getRecentTraffic():
                     if title == 'Referrers':
                         dictOrgSummary[title][key] += dictReferrers[key]
                     if title == 'Paths':
-                        pass#dictOrgSummary[title][key] += int(dict[key])
+                        dictOrgSummary[title][key] += int(dictPaths[key])
                     if title == 'Views':
-                        pass#dictOrgSummary[title][key] += int(dict[key])
+                        dictOrgSummary[title][key] += int(dictViews[key])
                     if title == 'Clones':
-                        pass#dictOrgSummary[title][key] += int(dictClones[key])
-            
-        #for title,dict in dictOrgSummary.items():
-            #for key,value in dict.items():
-                #print 'Test: ' + title + ' ' + key + ' ' + str(dict[key])
+                        dictOrgSummary[title][key] += int(dictClones[key])
+        
+        # Finally, display summary
+        print ' '
+        printHeaderMsg(' ** Summary for ' + scheme + '://' + getServer() + '/' + getOwner() + ' ** ')
+        
+        for title,dict in dictOrgSummary.items():
+            print title + ':'
+            for key,value in dict.items():
+                print '  ' + key + ' ' + str(dict[key])
 
 #end getRecentTraffic()-------------------------------
 
@@ -272,6 +277,8 @@ def getHTTPResponse(headers, path):
 
 def getRecentTrafficForRepo(repo):
     
+    debugMsg('Entered getRecentTrafficForRepo()')    
+    
     # Let's keep track of the summary
     dictReferrers = {}
     dictPaths = {}
@@ -298,7 +305,7 @@ def getRecentTrafficForRepo(repo):
             if key == 'uniques':
                 uniques = int(value)
         print str('  ' + referrer + ' (Count ' + str(count) + ', Uniques ' + str(uniques) + ')')
-        dictReferrers = {'Count':int(count),'Uniques':int(uniques)}
+    dictReferrers = {'Count':count,'Uniques':uniques}
 
     # +----------------------------+
     # | List paths                 |
@@ -320,7 +327,7 @@ def getRecentTrafficForRepo(repo):
             if key == 'uniques':
                 uniques = int(value)
         print str('  ' + path + ' (Count ' + str(count) + ', Uniques ' + str(uniques) + ')')
-        dictPaths = {'Count':int(count),'Uniques':int(uniques)}
+    dictPaths = {'Count':count,'Uniques':uniques}
 
     # +----------------------------+
     # | List views                 |
@@ -338,7 +345,7 @@ def getRecentTrafficForRepo(repo):
         if key == 'uniques':
             uniques = int(value)
     print str('  (Count ' + str(count) + ', Uniques ' + str(uniques) + ')')
-    dictViews = {'Count':int(count),'Uniques':int(uniques)}
+    dictViews = {'Count':count,'Uniques':uniques}
     
     # +----------------------------+
     # | List clones                 |
@@ -356,10 +363,10 @@ def getRecentTrafficForRepo(repo):
         if key == 'uniques':
             uniques = int(value)
     print str('  (Count ' + str(count) + ', Uniques ' + str(uniques) + ')')
-    dictClones = {'Count':int(count),'Uniques':int(uniques)}
+    dictClones = {'Count':count,'Uniques':uniques}
     
     # Return the summary to the caller
-    debugMsg('Refferers=('+str(dictReferrers)+')')
+    debugMsg('getRecentTrafficForRepo() return values: Refferers=('+str(dictReferrers)+'); Paths=('+str(dictPaths)+'); Views=('+str(dictViews)+'); Clones=('+str(dictClones))
     return dictReferrers, dictPaths, dictViews, dictClones
 
 #end getRecentTrafficForRepo()-------------------------------
