@@ -169,9 +169,13 @@ done
 
 # Check that we have a SERVER to connect to
 if [ ! -n "$SERVER" ]; then
-  echo -n "Enter the name of the GitHub server (i.e. github.com) and press [ENTER]: "
-  read SERVER
-  export SERVER=$SERVER
+  echo -n "Enter the name of the GitHub server (i.e. github.com) and press [ENTER]: ";
+  read SERVER;
+  if [ ! -n "$SERVER" ] || [ "$SERVER" == "" ]; then
+    export SERVER="github.com";
+  else
+    export SERVER=$SERVER;
+  fi;
 fi
 
 # Check that we have a SCRIPTNAME to work with

@@ -1,21 +1,32 @@
 #!/usr/bin/env bash
 #
-# Filename:     getContributors
+# Filename:     getRecentTraffic
 #
-# Description:  Get a list of contributors for the specified
-#               GitHub OWNER/REPO (REPO is optional).
+# Description:  Get the latest traffic details for a repository in
+#               which the user has admin rights. Must be authenticated.
 #
 
 # +---------------------------------------------------------------------------+
 # | Set Attribute(s) for the GitHub Admin Toolkit.                            |
 # | Disable this script by setting GITHUB_ADMIN_ENABLED=0                     |
 # +---------------------------------------------------------------------------+
-GITHUB_ADMIN_DESC="List all contributors for the specified OWNER/REPO. If no repo provided, then list contributors for org."
+GITHUB_ADMIN_DESC="Get Recent Traffic for your org/repo. (Currently only available on github.com)"
 GITHUB_ADMIN_ENABLED=1
 
 # +---------------------------------------------------------------------------+
 # | We need a minimum set of params before we can continue.                   |
 # +---------------------------------------------------------------------------+
+
+# This must only be run against github.com. See https://developer.github.com/v3/repos/traffic/
+if [ "$SERVER" == "github.com" ]; then
+  export APIBASE="https://api.github.com";
+  [[ -n "$DEBUG" ]] && echo "APIBASE is $APIBASE";
+else
+  if [ -n "$SERVER" ] && [ "$SERVER" != "github.com" ]; then
+    printf "\nERROR: The server for this script must be github.com while this endpoint is in Preview mode. See https://developer.github.com/v3/repos/traffic/ for details.\n\n"
+    exit 1;
+  fi;
+fi
 
 # Check that we have an APIBASE to connect to
 if [ ! -n "$APIBASE" ]; then
@@ -31,9 +42,16 @@ if [ ! -n "$OWNER" ]; then
   export OWNER=$OWNER;
 fi
 
+# Check that we have a AUTH token to work with
+if [ ! -n "$AUTH" ]; then
+  echo -n "Enter a GitHub Auth token and press [ENTER]: ";
+  read AUTH;
+  export AUTH=$AUTH;
+fi
+
 # +---------------------------------------------------------------------------+
 # | Perform work.                                                             |
 # +---------------------------------------------------------------------------+
 
 # Call module
-python ./scripts/modules/github-admin-toolkit.py getContributors
+python ./scripts/modules/github-admin-toolkit.py getRecentTraffic

@@ -11,13 +11,11 @@ import os
 import sys
 import urllib2
 
-debug           = None                              # Debug mode flag
-py3             = False                             # Detect python version
-httpHeaders     = {}                                # HTTP header value
-acceptHeader    = 'application/vnd.github.v3+json'  # Accept header for HTTP call
-auth            = None                              # If needed, the Authorization token
-
-
+debug                   = None                                          # Debug mode flag
+py3                     = False                                         # Detect python version
+acceptHeader            = 'application/vnd.github.v3+json'              # Accept header for HTTP call
+acceptHeaderSpiderman   = 'application/vnd.github.spiderman-preview'    # Custom preview header for Traffic endpoint
+auth                    = None                                          # If needed, the Authorization token
 
 """
 
@@ -29,11 +27,77 @@ auth            = None                              # If needed, the Authorizati
  
 """
 
+def getRecentTraffic():
+
+    debugMsg('Entered getRecentTraffic()')
+
+    # Check if the repo was provided
+    if os.environ.get('REPO'):
+        
+        debugMsg('Both OWNER/REPO provided (' + getOwner() + '/' + getRepo() + ')')
+        
+        # Display the header
+        printHeaderMsg('Traffic info for https://' + getServer() + '/' + getOwner() + '/' + getRepo())
+        
+        # Build and show the output
+        getRecentTrafficForRepo(getRepo())
+    
+    
+    else: # Only owner was provided
+
+        debugMsg('Only OWNER provided (' + getOwner() + ')')
+
+        # Get data with the provided owner first
+        headers = {'Accept':acceptHeader}
+        scheme, code, response = getHTTPResponse(headers, '/orgs/' + getOwner() + '/repos')
+        
+        # Display the header
+        print 'Traffic info for https://' + getServer() + '/' + getOwner()
+        
+        # Keep track of overall org-level contributions
+        dictOrgSummary = {"Referrers":{"Count":0,"Uniques":0},"Paths":{"Count":0,"Uniques":0},"Views":{"Count":0,"Uniques":0},"Clones":{"Count":0,"Uniques":0}}
+        
+        # Build and display the output, iterate over repos
+        full_name = None
+        repo = None
+        for repos in response:
+            for key, value in repos.items():
+                if key == 'name':
+                    repo = str(value)
+                if key == 'full_name':
+                    full_name = str(value)
+            # Get traffic for this repo
+            debugMsg('Getting traffic for ' + full_name)
+            print ' '
+            printHeaderMsg(full_name)
+            dictReferrers, dictPaths, dictViews, dictClones = getRecentTrafficForRepo(repo)
+            
+            # Add repo results to summary
+            for title, dict in dictOrgSummary.items():
+                for key, value in dict.items():
+                    if title == 'Referrers':
+                        dictOrgSummary[title][key] += dictReferrers[key]
+                    if title == 'Paths':
+                        dictOrgSummary[title][key] += int(dictPaths[key])
+                    if title == 'Views':
+                        dictOrgSummary[title][key] += int(dictViews[key])
+                    if title == 'Clones':
+                        dictOrgSummary[title][key] += int(dictClones[key])
+        
+        # Finally, display summary
+        print ' '
+        printHeaderMsg(' ** Summary for ' + scheme + '://' + getServer() + '/' + getOwner() + ' ** ')
+        
+        for title,dict in dictOrgSummary.items():
+            print title + ':'
+            for key,value in dict.items():
+                print '  ' + key + ' ' + str(dict[key])
+
+#end getRecentTraffic()-------------------------------
+
 def getLatestRelease():
 
-    debugMsg('Entered getLatestRelease()')
-
-    scheme, code, response = getHTTPResponse('/repos/' + getOwner() + '/' + getRepo() + '/releases/latest')
+    print 'getLatestRelease() Not Yet Implemented. See https://github.com/colossus9/github-admin-toolkit/issues/4'
 
 #end getLatestRelease()-------------------------------
 
@@ -45,7 +109,8 @@ def getContributors():
     if os.environ.get('REPO'):
 
         debugMsg('Both OWNER/REPO provided (' + getOwner() + '/' + getRepo() + ')')
-        scheme, code, response = getHTTPResponse('/repos/' + getOwner() + '/' + getRepo() + '/contributors')
+        headers = {'Accept':acceptHeader}
+        scheme, code, response = getHTTPResponse(headers, '/repos/' + getOwner() + '/' + getRepo() + '/contributors')
 
         # Parse data
         debugMsg('Parsing Response Body')
@@ -53,7 +118,7 @@ def getContributors():
         # Display the header
         printHeaderMsg('Contributors for ' + scheme + '://' + getServer() + '/' + getOwner() + '/' + getRepo())
 
-        # Build and display the output
+        # Build the output
         login = None
         contributions = None
         for user in response:
@@ -64,12 +129,14 @@ def getContributors():
                     contributions = str(value)
             print str(login + ' (' + scheme + '://' + getServer() + '/' + login + ')' + ' ' + contributions)
 
-    else:
+    
+    else: # Only owner was provided
 
         debugMsg('Only OWNER provided (' + getOwner() + ')')
 
         # Get data with the provided owner first
-        scheme, code, response = getHTTPResponse('/orgs/' + getOwner() + '/repos')
+        headers = {'Accept':acceptHeader}
+        scheme, code, response = getHTTPResponse(headers, '/orgs/' + getOwner() + '/repos')
 
         # Parse data
         debugMsg('Parsing Response Body')
@@ -92,7 +159,8 @@ def getContributors():
 
             # Get collaborators for this repo
             debugMsg('Getting collaborators for ' + full_name)
-            scheme, code, response = getHTTPResponse('/repos/' + full_name + '/contributors')
+            headers = {'Accept':acceptHeader}
+            scheme, code, response = getHTTPResponse(headers, '/repos/' + full_name + '/contributors')
 
             # Parse data
             debugMsg('Parsing Response Body')
@@ -135,7 +203,7 @@ def getContributors():
  
 """
 
-def getHTTPResponse(path):
+def getHTTPResponse(headers, path):
     
     debugMsg('Entered getHTTPResponse()')
     
@@ -154,19 +222,15 @@ def getHTTPResponse(path):
     request = None
     url = getAPIBase() + path
     scheme = urlsplit(url).scheme
+    request = Request(url)
     
     # Debug msgs
     debugMsg('url = ' + str(url))    
     debugMsg('scheme = ' + str(scheme))
     
     # Set needed header(s)
-    request = Request(url)
-    request.add_header('Accept', getHTTPHeader('Accept'))
-    
-    # ...including Authentication header (if needed)
-    if not auth == None:        
-        debugMsg('Using Authentication Header')            
-        request.add_header('Authorization', getHTTPHeader('Authorization'))
+    for key, value in headers.items():
+        request.add_header(key, value)
     
     # Get the response
     try:
@@ -176,12 +240,30 @@ def getHTTPResponse(path):
         
         # If HTTP 401 or 403, get auth token and try again
         if str(e.code) == '401' or str(e.code) == '403':
-            setAuth()
-            scheme, code, body = getHTTPResponse(path)
-            return scheme, code, body
+            if 'Authorization' in headers:  # We already tried auth and it didn't work.
+                errMsg('HTTP Status Code ' + str(e.code) + '. The Auth token provided was not accepted. Try again using the [-d|--debug] option to check the token. You may also need to be an admin on the repo.')
+                debugMsg('Tried auth token: ' + str(headers['Authorization']))
+                _exit(1)
+                
+            else: # We haven't tried auth yet, so let's add it and send the request again
+                setAuth()
+                headers['Authorization'] = getAuth()
+                scheme, code, body = getHTTPResponse(headers, path)
+                return scheme, code, body
         
-        errMsg('HTTP Status Code ' + str(e.code) + '. Please check your inputs and try again.')
-        _exit(1)
+        # If HTTP 404, then not found, check inputs or private repo
+        elif str(e.code) == '404':
+            errMsg('HTTP Status Code ' + str(e.code) + ' (Not Found). The requested endpoint may not exist, or the repository being accessed may be private.')
+        
+        # if HTTP 415, then wrong Accept header provided
+        elif str(e.code) == '415':
+            errMsg('HTTP Status Code ' + str(e.code) + '. The Accept header provided (' + str(headers['Accept']) + ') may be incorrect.')
+        
+        # Display generic message
+        else:
+            errMsg('HTTP Status Code ' + str(e.code) + '. Please check your inputs and try again.')
+            _exit(1)
+            
     except URLError as e:
         errMsg('URLError Exception. Please check the connection string and the network and try again.')
         _exit(1)
@@ -192,6 +274,102 @@ def getHTTPResponse(path):
         return scheme, response.code, body
 
 #end getHTTPResponse()-------------------------------
+
+def getRecentTrafficForRepo(repo):
+    
+    debugMsg('Entered getRecentTrafficForRepo()')    
+    
+    # Let's keep track of the summary
+    dictReferrers = {}
+    dictPaths = {}
+    dictViews = {}
+    dictClones = {}
+    
+    # +----------------------------+
+    # | List referrers             |
+    # +----------------------------+
+    headers = {'Accept' : acceptHeaderSpiderman, 'Authorization' : getAuth()}
+    scheme, code, response = getHTTPResponse(headers, '/repos/' + getOwner() + '/' + repo + '/traffic/popular/referrers')
+
+    # Build the output
+    print 'Referrers:'
+    referrer = None
+    count = 0
+    uniques = 0
+    for referrers in response:
+        for key, value in referrers.items():
+            if key == 'referrer':
+                referrer = str(value)
+            if key == 'count':
+                count = int(value)
+            if key == 'uniques':
+                uniques = int(value)
+        print str('  ' + referrer + ' (Count ' + str(count) + ', Uniques ' + str(uniques) + ')')
+    dictReferrers = {'Count':count,'Uniques':uniques}
+
+    # +----------------------------+
+    # | List paths                 |
+    # +----------------------------+
+    headers = {'Accept' : acceptHeaderSpiderman, 'Authorization' : getAuth()}
+    scheme, code, response = getHTTPResponse(headers, '/repos/' + getOwner() + '/' + repo + '/traffic/popular/paths')
+    
+    # Build the output
+    print 'Paths:'
+    path = None
+    count = 0
+    uniques = 0
+    for paths in response:
+        for key, value in paths.items():
+            if key == 'path':
+                path = str(value)
+            if key == 'count':
+                count = int(value)
+            if key == 'uniques':
+                uniques = int(value)
+        print str('  ' + path + ' (Count ' + str(count) + ', Uniques ' + str(uniques) + ')')
+    dictPaths = {'Count':count,'Uniques':uniques}
+
+    # +----------------------------+
+    # | List views                 |
+    # +----------------------------+
+    headers = {'Accept' : acceptHeaderSpiderman, 'Authorization' : getAuth()}
+    scheme, code, response = getHTTPResponse(headers, '/repos/' + getOwner() + '/' + repo + '/traffic/views')
+    
+    # Build the output
+    print 'Views:'
+    count = 0
+    uniques = 0
+    for key, value in response.items():
+        if key == 'count':
+            count = int(value)
+        if key == 'uniques':
+            uniques = int(value)
+    print str('  (Count ' + str(count) + ', Uniques ' + str(uniques) + ')')
+    dictViews = {'Count':count,'Uniques':uniques}
+    
+    # +----------------------------+
+    # | List clones                 |
+    # +----------------------------+
+    headers = {'Accept' : acceptHeaderSpiderman, 'Authorization' : getAuth()}
+    scheme, code, response = getHTTPResponse(headers, '/repos/' + getOwner() + '/' + repo + '/traffic/clones')
+    
+    # Build the output
+    print 'Clones:'
+    count = 0
+    uniques = 0
+    for key, value in response.items():
+        if key == 'count':
+            count = int(value)
+        if key == 'uniques':
+            uniques = int(value)
+    print str('  (Count ' + str(count) + ', Uniques ' + str(uniques) + ')')
+    dictClones = {'Count':count,'Uniques':uniques}
+    
+    # Return the summary to the caller
+    debugMsg('getRecentTrafficForRepo() return values: Refferers=('+str(dictReferrers)+'); Paths=('+str(dictPaths)+'); Views=('+str(dictViews)+'); Clones=('+str(dictClones))
+    return dictReferrers, dictPaths, dictViews, dictClones
+
+#end getRecentTrafficForRepo()-------------------------------
 
 def getPythonVersion():
     
@@ -270,24 +448,6 @@ def getServer():
 
 #end getServer()-------------------------------
 
-def getHTTPHeader(header):
-    
-    debugMsg('Entered getHTTPHeader()')
-    
-    global httpHeaders
-    global acceptHeader
-    
-    # Set the recommended Accept header
-    httpHeaders['Accept'] = acceptHeader
-    
-    # Check if we are requesting an Authorization header
-    if header == 'Authorization':
-        httpHeaders[header] = 'token ' + getAuth()
-    
-    return httpHeaders[header]
-
-#end getHTTPHeader()-------------------------------
-
 def getOwner():
     
     debugMsg('Entered getOwner()')
@@ -335,7 +495,7 @@ def getAuth():
     if auth == None:
         setAuth()
     
-    return auth
+    return 'token ' + auth
 
 #end getRepo()-------------------------------
 
@@ -356,7 +516,6 @@ def setAuth():
         print '(Note: A token for this server can be created at https://' + str(getServer()) + '/settings/tokens)';
         
         userInput = ': '
-        token = ''
         
         if py3:
             auth = str(input(userInput))
