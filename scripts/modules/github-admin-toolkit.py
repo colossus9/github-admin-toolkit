@@ -29,7 +29,13 @@ auth            = None                              # If needed, the Authorizati
  
 """
 
+def getLatestRelease():
 
+    debugMsg('Entered getLatestRelease()')
+
+    scheme, code, response = getHTTPResponse('/repos/' + getOwner() + '/' + getRepo() + '/releases/latest')
+
+#end getLatestRelease()-------------------------------
 
 def getContributors():
 

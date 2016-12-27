@@ -71,3 +71,7 @@ To run **getContributors**:
     ```
 
 Remember to use the **help** option with `-h|--help` for a list of additional options you may wish to try, including **proxy** `-p|--proxy` and **debug** `-d|--debug` modes.
+
+## getLatestRelease
+
+TBD

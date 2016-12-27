@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+#
+# Filename:     getLatestRelease
+#
+# Description:  Get the latest release details of a GitHub
+#               Repository for use with a Change Record audit
+#               system.
+#
+
+# +---------------------------------------------------------------------------+
+# | Set Attribute(s) for the GitHub Admin Toolkit.                            |
+# | Disable this script by setting GITHUB_ADMIN_ENABLED=0                     |
+# +---------------------------------------------------------------------------+
+GITHUB_ADMIN_DESC="Retrieve latest release details for a repo. Intended for loading/consumption by Change Record system."
+GITHUB_ADMIN_ENABLED=1
+
+# +---------------------------------------------------------------------------+
+# | We need a minimum set of params before we can continue. REPO is optional. |
+# +---------------------------------------------------------------------------+
+
+# Check that we have an APIBASE to connect to
+if [ ! -n "$APIBASE" ]; then
+  echo -n "Enter the API base url of the GitHub server (i.e. https://api.github.com) and press [ENTER]: ";
+  read APIBASE;
+  export APIBASE=$APIBASE;
+fi;
+
+# Check that we have an OWNER to work with
+if [ ! -n "$OWNER" ]; then
+  echo -n "Enter the name of the GitHub Owner and press [ENTER]: ";
+  read OWNER;
+  export OWNER=$OWNER;
+fi
+
+# Check that we have a REPO to work with
+if [ ! -n "$REPO" ]; then
+  echo -n "Enter the name of the GitHub Repository and press [ENTER]: ";
+  read REPO;
+  export REPO=$REPO;
+fi
+
+# +---------------------------------------------------------------------------+
+# | Perform work.                                                             |
+# +---------------------------------------------------------------------------+
+
+# Call module
+python ./scripts/modules/github-admin-toolkit.py getLatestRelease
