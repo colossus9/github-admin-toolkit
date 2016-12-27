@@ -29,11 +29,17 @@ auth            = None                              # If needed, the Authorizati
  
 """
 
+def getRecentTraffic():
+
+    debugMsg('Entered getRecentTraffic()')
+
+    #scheme, code, response = getHTTPResponse('/repos/StPaulThorndale/hubot-rafiki/traffic/views')
+
+#end getRecentTraffic()-------------------------------
+
 def getLatestRelease():
 
-    debugMsg('Entered getLatestRelease()')
-
-    scheme, code, response = getHTTPResponse('/repos/' + getOwner() + '/' + getRepo() + '/releases/latest')
+    print 'getLatestRelease() Not Yet Implemented. See https://github.com/colossus9/github-admin-toolkit/issues/4'
 
 #end getLatestRelease()-------------------------------
 

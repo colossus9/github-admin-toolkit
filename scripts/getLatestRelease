@@ -12,10 +12,10 @@
 # | Disable this script by setting GITHUB_ADMIN_ENABLED=0                     |
 # +---------------------------------------------------------------------------+
 GITHUB_ADMIN_DESC="Retrieve latest release details for a repo. Intended for loading/consumption by Change Record system."
-GITHUB_ADMIN_ENABLED=1
+GITHUB_ADMIN_ENABLED=0
 
 # +---------------------------------------------------------------------------+
-# | We need a minimum set of params before we can continue. REPO is optional. |
+# | We need a minimum set of params before we can continue.                   |
 # +---------------------------------------------------------------------------+
 
 # Check that we have an APIBASE to connect to
