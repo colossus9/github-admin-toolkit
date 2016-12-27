@@ -5,6 +5,7 @@ Administrative templates and tools for use with GitHub repositories.
 This toolkit provides a simple interface to interact with frequently used GitHub API endpoints. 
 
 **GitHub API Documentation:** https://developer.github.com/v3
+**GitHub API Status:** [![Build Status](https://travis-ci.org/colossus9/github-api-status.svg?branch=master)](https://travis-ci.org/colossus9/github-api-status)
 
 One of the reasons teams choose GitHub is because they want visibility in how they and their team works, who is contributing and how their project is being consumed. They also want the ability to showcase their project to others for ~advertisement purposes~ or because they are looking for outside contributors to make their project better.
 
