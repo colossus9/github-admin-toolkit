@@ -34,19 +34,29 @@ auth            = None                              # If needed, the Authorizati
 def getContributors():
 
     debugMsg('Entered getContributors()')
-    
+
     # Check if the repo was provided
     if os.environ.get('REPO'):
-        
+
         debugMsg('Both OWNER/REPO provided (' + getOwner() + '/' + getRepo() + ')')
         scheme, code, response = getHTTPResponse('/repos/' + getOwner() + '/' + getRepo() + '/contributors')
-        
+
         # Parse data
         debugMsg('Parsing Response Body')
-        for item in response:
-            for key, value in item.items():
+
+        # Display the header
+        printHeaderMsg('Contributors for ' + scheme + '://' + getServer() + '/' + getOwner() + '/' + getRepo())
+
+        # Build and display the output
+        login = None
+        contributions = None
+        for user in response:
+            for key, value in user.items():
                 if key == 'login':
-                    print value + ' (' + scheme + '://' + getServer() + '/' + value + ')'
+                    login = str(value + ' (' + scheme + '://' + getServer() + '/' + value + ')')
+                if key == 'contributions':
+                    contributions = str(value)
+            print str(login + ' ' + contributions)
 
     else:
         
@@ -315,6 +325,15 @@ def getScriptName():
 
 #end getServer()-------------------------------
 
+def printHeaderMsg(msg):
+
+    print msg
+    if py3:
+        print('-' * len(msg))
+    else:
+        print '-' * len(msg)
+
+#end printHeaderMsg()-------------------------------
 
 
 """

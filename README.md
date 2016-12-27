@@ -39,7 +39,7 @@ There is currently one way to run this tool, but several in planning. As of now,
 
 To run this tool from a Linux-based command line:
 
-1. (Optional) Set the web proxy if you are behind a company firewall:
+1. **(Optional)** Set the web proxy if you are behind a company firewall:
 
     ```
     export http_proxy=http://proxy.company.com:8080
@@ -65,7 +65,7 @@ To run this tool from a Linux-based command line:
     ./github-admin-toolkit.sh --list
     ```
 
-5. To run a script from the command line, specify it as an argument to `github-admin-toolkit.sh`. You can either specify **github.com** as a server, or you can specify a **GitHub Enterprise** server. Below is an example:
+5. To run a script from the command line, specify it as an argument to `github-admin-toolkit.sh`. You can either specify **github.com** as a server, or you can specify a Below is an example:
 
     ```
     ./github-admin-toolkit.sh --server github.com --owner git --repo git getContributors
