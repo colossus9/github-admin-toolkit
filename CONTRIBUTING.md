@@ -24,6 +24,6 @@ Use the below guide to add scripts to the toolkit:
 3. Create a new method or Update the existing method of the same name in the [Python module](https://github.com/colossus9/github-admin-toolkit/blob/master/scripts/modules/github-admin-toolkit.py)
     - For example, if your script is called `scripts/getNeededData`, then the associated Python module method should be named `getNeededData()`
 
-To see a previous simple fully working change, see [this Pull Request](https://github.com/colossus9/github-admin-toolkit/pull/11).
+**To see a previous simple fully working change, see [this Pull Request](https://github.com/colossus9/github-admin-toolkit/pull/11).**
 
 Please use existing code as a guide! It is well documented and formatted with comments.
