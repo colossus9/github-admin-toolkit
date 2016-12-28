@@ -35,7 +35,11 @@ Currently in planning there are several methods to run the tool, for example:
 - Run from a job engine (Jenkins, Electric Commander, etc)
 - Called via hubot
 
-As of today this tool is executed from a unix-based command line. To run this tool:
+As of today this tool is executed from a unix-based command line. 
+
+![Command Line Animation](https://raw.githubusercontent.com/colossus9/github-admin-toolkit/master/media/github-admin-toolkit.gif)
+
+To run this tool:
 
 1. **(Optional)** Set the web proxy if you are behind a company firewall:
 
