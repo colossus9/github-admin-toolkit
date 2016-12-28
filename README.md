@@ -7,7 +7,7 @@ This toolkit provides a simple interface to interact with frequently used GitHub
 - **GitHub API Documentation:** https://developer.github.com/v3
 - **GitHub API Status:** [![Build Status](https://travis-ci.org/colossus9/github-api-status.svg?branch=master)](https://travis-ci.org/colossus9/github-api-status)
 
-Be sure to check out the [Issues List](https://github.com/colossus9/github-admin-toolkit/issues) for questions, enhancements, feedback, etc regarding this project.
+:warning: Be sure to check out the [Issues List](https://github.com/colossus9/github-admin-toolkit/issues) for questions, enhancements, feedback, etc regarding this project.
 
 # Why use this toolkit?
 
@@ -25,7 +25,7 @@ Enterprise customers use a private instance to store sensitive company intellect
  - Easily use commonly used API calls in specific formats
  - Customize output for business reports
 
-:point_right: :point_right: Be sure to check out the [Issues List](https://github.com/colossus9/github-admin-toolkit/issues) for questions, enhancements, feedback, etc regarding this project.
+:warning: Be sure to check out the [Issues List](https://github.com/colossus9/github-admin-toolkit/issues) for questions, enhancements, feedback, etc regarding this project.
 
 # How to run the toolkit
 
