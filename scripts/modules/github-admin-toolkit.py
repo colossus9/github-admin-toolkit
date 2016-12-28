@@ -27,6 +27,18 @@ auth                    = None                                          # If nee
  
 """
 
+def listUserForks():
+
+    debugMsg('Entered listUserForks()')
+    
+    # Display the header
+    printHeaderMsg('Listing forks for https://' + getServer() + '/' + getOwner() + '/' + getRepo())
+    
+    # Build and show the output
+    getForkInfoForRepo(getRepo())
+    
+#end listUserForks()()-------------------------------
+
 def getRecentTraffic():
 
     debugMsg('Entered getRecentTraffic()')
@@ -252,8 +264,17 @@ def getHTTPResponse(headers, path):
                 return scheme, code, body
         
         # If HTTP 404, then not found, check inputs or private repo
-        elif str(e.code) == '404':
-            errMsg('HTTP Status Code ' + str(e.code) + ' (Not Found). The requested endpoint may not exist, or the repository being accessed may be private.')
+        elif str(e.code) == '404':            
+            if 'Authorization' in headers:  # We already tried auth and it didn't work.
+                errMsg('HTTP Status Code ' + str(e.code) + '. The endpoint was not found. Try again using the [-d|--debug] option to check the token. You may also need to be an admin on the repo.')
+                debugMsg('Tried auth token: ' + str(headers['Authorization']))
+                _exit(1)
+                
+            else: # We haven't tried auth yet, so let's add it and send the request again
+                setAuth()
+                headers['Authorization'] = getAuth()
+                scheme, code, body = getHTTPResponse(headers, path)
+                return scheme, code, body
         
         # if HTTP 415, then wrong Accept header provided
         elif str(e.code) == '415':
@@ -275,9 +296,36 @@ def getHTTPResponse(headers, path):
 
 #end getHTTPResponse()-------------------------------
 
+def getForkInfoForRepo(repo):
+    
+    debugMsg('Entered getForkInfoForRepo()')
+    
+    global acceptHeader
+    
+    # +----------------------------+
+    # | Get Fork Info              |
+    # +----------------------------+
+    headers = {'Accept' : acceptHeader}
+    scheme, code, response = getHTTPResponse(headers, '/repos/' + getOwner() + '/' + repo + '/forks')
+    
+    # Build the output
+    full_name = None
+    html_url = None
+    for forks in response:
+        for key, value in forks.items():
+            if key == 'full_name':
+                full_name = str(value)
+            if key == 'html_url':
+                html_url = str(value)
+        print str(full_name + ' (' + html_url + ')')
+    
+#end getForkInfoForRepo()-------------------------------
+
 def getRecentTrafficForRepo(repo):
     
-    debugMsg('Entered getRecentTrafficForRepo()')    
+    debugMsg('Entered getRecentTrafficForRepo()')
+    
+    global acceptHeaderSpiderman
     
     # Let's keep track of the summary
     dictReferrers = {}

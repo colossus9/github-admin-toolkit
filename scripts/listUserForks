@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+#
+# Filename:     listUserForks
+#
+# Description:  Display a list of forks for the provided repository.
+#
+
+# +---------------------------------------------------------------------------+
+# | Set Attribute(s) for the GitHub Admin Toolkit.                            |
+# | Disable this script by setting GITHUB_ADMIN_ENABLED=0                     |
+# +---------------------------------------------------------------------------+
+GITHUB_ADMIN_DESC="Display a list of forks for the provided repository."
+GITHUB_ADMIN_ENABLED=1
+
+# +---------------------------------------------------------------------------+
+# | We need a minimum set of params before we can continue.                   |
+# +---------------------------------------------------------------------------+
+
+# Check that we have an APIBASE to connect to
+if [ ! -n "$APIBASE" ]; then
+  echo -n "Enter the API base url of the GitHub server (i.e. https://api.github.com) and press [ENTER]: ";
+  read APIBASE;
+  export APIBASE=$APIBASE;
+fi;
+
+# Check that we have an OWNER to work with
+if [ ! -n "$OWNER" ]; then
+  echo -n "Enter the name of the GitHub Owner and press [ENTER]: ";
+  read OWNER;
+  export OWNER=$OWNER;
+fi
+
+# Check that we have a REPO token to work with
+if [ ! -n "$REPO" ]; then
+  echo -n "Enter the name of the GitHub Repo and press [ENTER]: ";
+  read REPO;
+  export REPO=$REPO;
+fi
+
+# +---------------------------------------------------------------------------+
+# | Perform work.                                                             |
+# +---------------------------------------------------------------------------+
+
+# Call module
+python ./scripts/modules/github-admin-toolkit.py listUserForks
