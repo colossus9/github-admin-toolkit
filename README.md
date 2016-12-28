@@ -1,4 +1,4 @@
-# github-admin-toolkit
+## Welcome to the github-admin-toolkit
 
 Administrative templates and tools for use with GitHub repositories. :+1:
 
@@ -9,7 +9,7 @@ This toolkit provides a simple interface to interact with frequently used GitHub
 
 :warning: Be sure to check out the [Issues List](https://github.com/colossus9/github-admin-toolkit/issues) for questions, enhancements, feedback, etc regarding this project.
 
-# Why use this toolkit?
+# Description
 
 Teams choose GitHub is because they want visibility in how their team works, including who is contributing and how their project is being consumed. GitHub doesn't just host project collateral, it is a Social Coding and Open/Inner Source platform that serves as the foundation for helping individuals, teams and companies ship and showcase great content.
 
@@ -65,7 +65,7 @@ As of today this tool is executed from a unix-based command line. To run this to
 
 5. Identify and provide options for the scripts you wish to run. Each script will provide specific output according to their descriptions. The **github-admin-toolkit** is capable of running against the public **github.com** or a **GitHub Enterprise** server (specified with the `[-s|--server]` option), but some of the _preview_ API endpoints available on **github.com** are not yet available on **GitHub Enterprise**.
 
-# Learn more
+# See Also
 
 Please check out the [wiki](https://github.com/colossus9/github-admin-toolkit/wiki) for additional details on implemented scripts.
 
