@@ -1,4 +1,4 @@
-## Welcome to the github-admin-toolkit
+# Welcome to the github-admin-toolkit
 
 Administrative templates and tools for use with GitHub repositories. :+1:
 
@@ -68,6 +68,8 @@ To run this tool:
     ```
 
 5. Identify and provide options for the scripts you wish to run. Each script will provide specific output according to their descriptions. The **github-admin-toolkit** is capable of running against the public **github.com** or a **GitHub Enterprise** server (specified with the `[-s|--server]` option), but some of the _preview_ API endpoints available on **github.com** are not yet available on **GitHub Enterprise**.
+
+***
 
 # See Also
 
