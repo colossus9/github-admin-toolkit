@@ -40,4 +40,4 @@ rm -rf $AVAIL_SCRIPTS  # Clear the table
 printf "\n"
 
 # Now remind the user how to utilize these scripts
-printf "  To execute a script, use \`./github-admin-toolkit.sh --help\` to see a list of available options.\n\n"
+printf "  Use \`./github-admin-toolkit.sh --help\` to see a list of available options. See https://github.com/colossus9/github-admin-toolkit/wiki for details.\n\n"
