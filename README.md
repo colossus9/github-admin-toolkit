@@ -1,30 +1,41 @@
 # github-admin-toolkit
 
-Administrative templates and tools for use with GitHub repositories.
+Administrative templates and tools for use with GitHub repositories. :+1:
 
 This toolkit provides a simple interface to interact with frequently used GitHub API endpoints. 
 
 - **GitHub API Documentation:** https://developer.github.com/v3
 - **GitHub API Status:** [![Build Status](https://travis-ci.org/colossus9/github-api-status.svg?branch=master)](https://travis-ci.org/colossus9/github-api-status)
 
+Be sure to check out the [Issues List](https://github.com/colossus9/github-admin-toolkit/issues) for questions, enhancements, feedback, etc regarding this project.
+
 # Why use this toolkit?
 
-One of the reasons teams choose GitHub is because they want visibility in how they and their team works, who is contributing and how their project is being consumed. They also want the ability to showcase their project to others for ~advertisement purposes~ or because they are looking for outside contributors to make their project better.
+Teams choose GitHub is because they want visibility in how their team works, including who is contributing and how their project is being consumed. GitHub doesn't just host project collateral, it is a Social Coding and Open/Inner Source platform that serves as the foundation for helping individuals, teams and companies ship and showcase great content.
 
 The **github-admin-toolkit** attempts to help bridge the gap between simple content hosting and analytics gathering to give GitHub stakeholders visibility into their projects.
 
-The GitHub API provides a way to automate and gather data about the content you store. The github-admin-toolkit provides a framework built around the GitHub API to let you get these statistics quickly, across a variety of platforms.
+The GitHub API provides a mechanism to automate and gather data about the content you store. The github-admin-toolkit provides a framework built around the GitHub API to let you get these statistics quickly, across a variety of platforms.
 
 Enterprise customers use a private instance to store sensitive company intellectual property, while they may also use the public github.com to open source content and contribute to public projects.
 
+**Common uses** include: :thought_balloon:
+
+ - Fine tune output to understand GitHub usage
+ - Easily use commonly used API calls in specific formats
+ - Customize output for business reports
+
+:point_right: :point_right: Be sure to check out the [Issues List](https://github.com/colossus9/github-admin-toolkit/issues) for questions, enhancements, feedback, etc regarding this project.
+
 # How to run the toolkit
 
-There is currently one way to run this tool, but several in planning. As of now, you can only run this tool from the command line, but the following methods are planned:
+Currently in planning there are several methods to run the tool, for example:
 
+- Command line _(available today)_
 - Run from a job engine (Jenkins, Electric Commander, etc)
 - Called via hubot
 
-To run this tool from a Linux-based command line:
+As of today this tool is executed from a unix-based command line. To run this tool:
 
 1. **(Optional)** Set the web proxy if you are behind a company firewall:
 
@@ -52,32 +63,9 @@ To run this tool from a Linux-based command line:
     ./github-admin-toolkit.sh --list
     ```
 
-5. Identify and provide options for the scripts you wish to run. Each script will provide specific output according to their descriptions. The **github-admin-toolkit** is capable of running against the public **github.com** or a **GitHub Enterprise** server (specified with the `[-s|--server]` option).
+5. Identify and provide options for the scripts you wish to run. Each script will provide specific output according to their descriptions. The **github-admin-toolkit** is capable of running against the public **github.com** or a **GitHub Enterprise** server (specified with the `[-s|--server]` option), but some of the _preview_ API endpoints available on **github.com** are not yet available on **GitHub Enterprise**.
 
-The following sections will describe a few script examples in detail.
+# Learn more
 
-## getContributors
+Please check out the [wiki](https://github.com/colossus9/github-admin-toolkit/wiki) for additional details on implemented scripts.
 
-The **getContributors** script will get a list of contributors for the specified **organization** or **repository**. If you only specify an **organization**, then the output will iterate over each public repository and provide contributors for each, as well as a summary at the end. If you specify both an **organization** and **repository**, contributor details will be displayed from only that repository. An HTTP 404 (Not Found) error may be thrown if you attempt to get data from a private repository.
-
-To run **getContributors**:
-
-1. Navigate to the directory where the repository is cloned.
-
-2. To get a contributor summary for a GitHub **organization**, use the following sample command as a guide:
-
-    ```
-    ./github-admin-toolkit.sh --server github.com --owner git getContributors
-    ```
-
-3. To get a contributor list for a GitHub **organization/repository**, specify both as options using the following sample command as a guide:
-
-    ```
-    ./github-admin-toolkit.sh --server github.com --owner git --repo git getContributors
-    ```
-
-Remember to use the **help** option with `-h|--help` for a list of additional options you may wish to try, including **proxy** `-p|--proxy` and **debug** `-d|--debug` modes.
-
-## getLatestRelease
-
-TBD
