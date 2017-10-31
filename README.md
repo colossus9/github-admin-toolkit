@@ -11,7 +11,7 @@ This toolkit provides a simple interface to interact with frequently used GitHub
 
 # Description
 
-Teams choose GitHub is because they want visibility in how their team works, including who is contributing and how their project is being consumed. GitHub doesn't just host project collateral, it is a Social Coding and Open/Inner Source platform that serves as the foundation for helping individuals, teams and companies ship and showcase great content.
+Teams choose GitHub because they want visibility in how their team works, including who is contributing and how their project is being consumed. GitHub doesn't just host project collateral, it is a Social Coding and Open/Inner Source platform that serves as the foundation for helping individuals, teams and companies ship and showcase great content.
 
 The **github-admin-toolkit** attempts to help bridge the gap between simple content hosting and analytics gathering to give GitHub stakeholders visibility into their projects.
 
