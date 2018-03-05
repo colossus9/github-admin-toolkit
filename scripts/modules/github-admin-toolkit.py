@@ -325,7 +325,7 @@ def getRecentTrafficForRepo(repo):
     
     debugMsg('Entered getRecentTrafficForRepo()')
     
-    global acceptHeaderSpiderman
+    global acceptHeader
     
     # Let's keep track of the summary
     dictReferrers = {}
@@ -336,7 +336,7 @@ def getRecentTrafficForRepo(repo):
     # +----------------------------+
     # | List referrers             |
     # +----------------------------+
-    headers = {'Accept' : acceptHeaderSpiderman, 'Authorization' : getAuth()}
+    headers = {'Accept' : acceptHeader, 'Authorization' : getAuth()}
     scheme, code, response = getHTTPResponse(headers, '/repos/' + getOwner() + '/' + repo + '/traffic/popular/referrers')
 
     # Build the output
@@ -358,7 +358,7 @@ def getRecentTrafficForRepo(repo):
     # +----------------------------+
     # | List paths                 |
     # +----------------------------+
-    headers = {'Accept' : acceptHeaderSpiderman, 'Authorization' : getAuth()}
+    headers = {'Accept' : acceptHeader, 'Authorization' : getAuth()}
     scheme, code, response = getHTTPResponse(headers, '/repos/' + getOwner() + '/' + repo + '/traffic/popular/paths')
     
     # Build the output
@@ -380,7 +380,7 @@ def getRecentTrafficForRepo(repo):
     # +----------------------------+
     # | List views                 |
     # +----------------------------+
-    headers = {'Accept' : acceptHeaderSpiderman, 'Authorization' : getAuth()}
+    headers = {'Accept' : acceptHeader, 'Authorization' : getAuth()}
     scheme, code, response = getHTTPResponse(headers, '/repos/' + getOwner() + '/' + repo + '/traffic/views')
     
     # Build the output
@@ -398,7 +398,7 @@ def getRecentTrafficForRepo(repo):
     # +----------------------------+
     # | List clones                 |
     # +----------------------------+
-    headers = {'Accept' : acceptHeaderSpiderman, 'Authorization' : getAuth()}
+    headers = {'Accept' : acceptHeader, 'Authorization' : getAuth()}
     scheme, code, response = getHTTPResponse(headers, '/repos/' + getOwner() + '/' + repo + '/traffic/clones')
     
     # Build the output
